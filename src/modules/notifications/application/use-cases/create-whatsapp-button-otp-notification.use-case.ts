@@ -16,9 +16,7 @@ export class CreateWhatsappButtonOtpNotificationUseCase {
     private readonly notificationRepository: NotificationRepository,
     private readonly queue: QueueRepository,
     private readonly logger: AppLogger,
-  ) {
-    this.logger.setContext(CreateWhatsappButtonOtpNotificationUseCase.name);
-  }
+  ) {}
 
   async execute(input: {
     to: string;

@@ -17,9 +17,7 @@ export class CreateWhatsappButtonPixNotificationUseCase {
     private readonly notificationRepository: NotificationRepository,
     private readonly queue: QueueRepository,
     private readonly logger: AppLogger,
-  ) {
-    this.logger.setContext(CreateWhatsappButtonPixNotificationUseCase.name);
-  }
+  ) {}
 
   async execute(input: {
     to: string;

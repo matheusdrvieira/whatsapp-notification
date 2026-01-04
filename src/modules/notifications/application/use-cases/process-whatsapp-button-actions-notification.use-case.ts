@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
-import type { SendButtonActionsJobData } from '../../domain/repositories/queue.repository';
+import type { SendButtonActionsInput } from '../../domain/repositories/queue.repository';
 import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 
 @Injectable()
@@ -15,11 +15,9 @@ export class ProcessWhatsappButtonActionsNotificationUseCase {
     private readonly notificationRepository: NotificationRepository,
     private readonly whatsappProvider: WhatsappRepository,
     private readonly logger: AppLogger,
-  ) {
-    this.logger.setContext(ProcessWhatsappButtonActionsNotificationUseCase.name);
-  }
+  ) { }
 
-  async execute(input: SendButtonActionsJobData): Promise<void> {
+  async execute(input: SendButtonActionsInput): Promise<void> {
     if (!input.notificationId) throw new BadRequestException();
 
     const notification = await this.notificationRepository.markSending(input.notificationId);

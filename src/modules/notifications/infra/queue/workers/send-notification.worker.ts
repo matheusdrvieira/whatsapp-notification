@@ -8,11 +8,11 @@ import { NotificationType } from 'src/modules/notifications/domain/enums/notific
 import { BullMqService } from '../../../../../shared/bullmq/bullmq.service';
 import { AppLogger } from '../../../../../shared/logger/app-logger.service';
 import { NotificationRepository } from '../../../domain/repositories/notification.repository';
-import type { SendButtonActionsJobData, SendButtonOtpJobData, SendButtonPixJobData, SendNotificationJobData, SendTextJobData } from '../../../domain/repositories/queue.repository';
+import type { SendButtonActionsInput, SendButtonOtpInput, SendButtonPixInput, SendNotificationInput, SendTextInput } from '../../../domain/repositories/queue.repository';
 
 @Injectable()
 export class SendNotificationWorker implements OnModuleInit {
-  private worker?: Worker<SendNotificationJobData>;
+  private worker?: Worker<SendNotificationInput>;
 
   constructor(
     private readonly bullmq: BullMqService,
@@ -22,25 +22,23 @@ export class SendNotificationWorker implements OnModuleInit {
     private readonly processWhatsappSendText: ProcessWhatsappSendTextNotificationUseCase,
     private readonly notificationRepository: NotificationRepository,
     private readonly logger: AppLogger,
-  ) {
-    this.logger.setContext(SendNotificationWorker.name);
-  }
+  ) { }
 
   onModuleInit(): void {
-    this.worker = this.bullmq.createWorker<SendNotificationJobData>(
+    this.worker = this.bullmq.createWorker<SendNotificationInput>(
       'notifications-send',
       async (job) => {
         const { notificationId, type } = job.data;
 
         try {
-          const handlerByType: Record<NotificationType, (input: SendNotificationJobData) => Promise<void>> = {
-            [NotificationType.TEXT]: async (input: SendTextJobData) =>
+          const handlerByType: Record<NotificationType, (input: SendNotificationInput) => Promise<void>> = {
+            [NotificationType.TEXT]: async (input: SendTextInput) =>
               this.processWhatsappSendText.execute(input),
-            [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsJobData) =>
+            [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsInput) =>
               this.processWhatsappButtonActions.execute(input),
-            [NotificationType.BUTTON_OTP]: async (input: SendButtonOtpJobData) =>
+            [NotificationType.BUTTON_OTP]: async (input: SendButtonOtpInput) =>
               this.processWhatsappButtonOtp.execute(input),
-            [NotificationType.BUTTON_PIX]: async (input: SendButtonPixJobData) =>
+            [NotificationType.BUTTON_PIX]: async (input: SendButtonPixInput) =>
               this.processWhatsappButtonPix.execute(input),
           };
 

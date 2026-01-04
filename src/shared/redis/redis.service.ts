@@ -11,7 +11,6 @@ export class RedisService extends RedisPort implements OnModuleDestroy {
 
   constructor(private readonly logger: AppLogger) {
     super();
-    this.logger.setContext(RedisService.name);
     this.client = new IORedis(env.REDIS_URL, { maxRetriesPerRequest: null });
   }
 

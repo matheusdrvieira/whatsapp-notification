@@ -1,12 +1,12 @@
 import { NotificationType } from '../enums/notification-type.enum';
 import type { PixKeyType, WhatsappButtonAction } from './whatsapp.repository';
 
-export type SendTextJobData = {
+export type SendTextInput = {
   notificationId: string;
   type: NotificationType.TEXT;
 };
 
-export type SendButtonActionsJobData = {
+export type SendButtonActionsInput = {
   notificationId: string;
   type: NotificationType.BUTTON_ACTIONS;
   buttonActions: WhatsappButtonAction[];
@@ -15,7 +15,7 @@ export type SendButtonActionsJobData = {
   footer?: string;
 };
 
-export type SendButtonOtpJobData = {
+export type SendButtonOtpInput = {
   notificationId: string;
   type: NotificationType.BUTTON_OTP;
   code: string;
@@ -23,7 +23,7 @@ export type SendButtonOtpJobData = {
   buttonText?: string;
 };
 
-export type SendButtonPixJobData = {
+export type SendButtonPixInput = {
   notificationId: string;
   type: NotificationType.BUTTON_PIX;
   pixKey: string;
@@ -31,12 +31,12 @@ export type SendButtonPixJobData = {
   merchantName?: string;
 };
 
-export type SendNotificationJobData =
-  | SendTextJobData
-  | SendButtonActionsJobData
-  | SendButtonOtpJobData
-  | SendButtonPixJobData;
+export type SendNotificationInput =
+  | SendTextInput
+  | SendButtonActionsInput
+  | SendButtonOtpInput
+  | SendButtonPixInput;
 
 export abstract class QueueRepository {
-  abstract enqueueSendNotification(data: SendNotificationJobData): Promise<void>;
+  abstract enqueueSendNotification(data: SendNotificationInput): Promise<void>;
 }

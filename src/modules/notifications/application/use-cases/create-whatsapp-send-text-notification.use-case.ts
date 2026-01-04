@@ -16,9 +16,7 @@ export class CreateWhatsappSendTextNotificationUseCase {
     private readonly notificationRepository: NotificationRepository,
     private readonly queue: QueueRepository,
     private readonly logger: AppLogger,
-  ) {
-    this.logger.setContext(CreateWhatsappSendTextNotificationUseCase.name);
-  }
+  ) {}
 
   async execute(input: { to: string; message: string }): Promise<Notification> {
     try {

@@ -18,7 +18,6 @@ export class ZapiWhatsappService extends WhatsappRepository {
     private readonly logger: AppLogger,
   ) {
     super();
-    this.logger.setContext(ZapiWhatsappService.name);
   }
 
   async sendText(input: SendTextInput): Promise<SendMessageOutput> {
