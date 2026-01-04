@@ -8,5 +8,6 @@ Content-Type: application/json
 
 {
   "to": "+5551998516699",
-  "message": "Olá! Sua notificação foi enviada."
+  "message": "Olá! Sua notificação foi enviada.",
+  "type":"TEXT"
 }

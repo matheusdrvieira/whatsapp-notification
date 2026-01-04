@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import type { Queue } from 'bullmq';
 import { BullMqService } from '../../../../shared/bullmq/bullmq.service';
-import { QueueRepository } from '../../domain/repositories/queue.repository';
-
-type SendQueueData = {
-  notificationId: string;
-};
+import {
+  QueueRepository,
+  SendNotificationJobData,
+} from '../../domain/repositories/queue.repository';
 
 @Injectable()
 export class BullMqAdapter implements QueueRepository {
-  private readonly queue: Queue<SendQueueData>;
+  private readonly queue: Queue<SendNotificationJobData>;
 
   constructor(private readonly bullmq: BullMqService) {
-    this.queue = this.bullmq.getQueue<SendQueueData>('notifications-send', {
+    this.queue = this.bullmq.getQueue<SendNotificationJobData>('notifications-send', {
       defaultJobOptions: {
         attempts: 3,
         backoff: {
@@ -25,7 +24,7 @@ export class BullMqAdapter implements QueueRepository {
     });
   }
 
-  async enqueueSendNotification(notificationId: string): Promise<void> {
-    await this.queue.add('send-notification', { notificationId });
+  async enqueueSendNotification(data: SendNotificationJobData): Promise<void> {
+    await this.queue.add('send-notification', data);
   }
 }

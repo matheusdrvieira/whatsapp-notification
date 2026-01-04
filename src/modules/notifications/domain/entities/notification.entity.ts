@@ -1,8 +1,10 @@
 import { Entity } from '../../../../shared/core/domain/entity';
 import { NotificationStatus } from '../enums/notification-status.enum';
+import { NotificationType } from '../enums/notification-type.enum';
 
 export type NotificationProps = {
   id?: string;
+  type: NotificationType;
   to: string;
   message: string;
   status: NotificationStatus;
@@ -13,6 +15,10 @@ export type NotificationProps = {
 export class Notification extends Entity<NotificationProps> {
   get id() {
     return this.props.id!;
+  }
+
+  get type() {
+    return this.props.type;
   }
 
   get to() {

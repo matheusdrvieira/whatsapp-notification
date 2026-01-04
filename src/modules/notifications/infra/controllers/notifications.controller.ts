@@ -11,8 +11,19 @@ export class NotificationsController {
     @Body() body: CreateNotificationDto,
   ) {
     const notification = await this.createNotification.execute({
+      type: body.type,
       to: body.to,
       message: body.message,
+      buttonActions: body.buttonActions,
+      delayMessage: body.delayMessage,
+      title: body.title,
+      footer: body.footer,
+      code: body.code,
+      image: body.image,
+      buttonText: body.buttonText,
+      pixKey: body.pixKey,
+      pixType: body.pixType,
+      merchantName: body.merchantName,
     });
 
     return {

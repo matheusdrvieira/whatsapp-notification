@@ -1,10 +1,12 @@
 import { Prisma, Notification as PrismaNotification } from '@prisma/client';
 import { Notification } from '../../domain/entities/notification.entity';
 import { NotificationStatus } from '../../domain/enums/notification-status.enum';
+import { NotificationType } from '../../domain/enums/notification-type.enum';
 
 export class NotificationMapper {
   static toPrisma(entity: Notification): Prisma.NotificationCreateInput {
     return {
+      type: entity.type,
       to: entity.to,
       message: entity.message,
       status: entity.status,
@@ -14,9 +16,10 @@ export class NotificationMapper {
   static toDomain(record: PrismaNotification): Notification {
     return Notification.create({
       id: record.id,
+      type: NotificationType[record.type],
       to: record.to,
       message: record.message,
-      status: record.status as NotificationStatus,
+      status: NotificationStatus[record.status],
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     });

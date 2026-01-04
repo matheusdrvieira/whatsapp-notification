@@ -3,14 +3,11 @@ import { UnrecoverableError, Worker } from 'bullmq';
 import { BullMqService } from '../../../../../shared/bullmq/bullmq.service';
 import { ProcessNotificationUseCase } from '../../../application/use-cases/process-notification.use-case';
 import { NotificationRepository } from '../../../domain/repositories/notification.repository';
-
-type SendQueueData = {
-  notificationId: string;
-};
+import type { SendNotificationJobData } from '../../../domain/repositories/queue.repository';
 
 @Injectable()
 export class SendNotificationWorker implements OnModuleInit {
-  private worker?: Worker<SendQueueData>;
+  private worker?: Worker<SendNotificationJobData>;
 
   constructor(
     private readonly bullmq: BullMqService,
@@ -20,13 +17,13 @@ export class SendNotificationWorker implements OnModuleInit {
   ) { }
 
   onModuleInit(): void {
-    this.worker = this.bullmq.createWorker<SendQueueData>(
+    this.worker = this.bullmq.createWorker<SendNotificationJobData>(
       'notifications-send',
       async (job) => {
         const { notificationId } = job.data;
 
         try {
-          await this.processNotification.execute({ notificationId });
+          await this.processNotification.execute(job.data);
         } catch (err) {
           this.logError(err);
 
