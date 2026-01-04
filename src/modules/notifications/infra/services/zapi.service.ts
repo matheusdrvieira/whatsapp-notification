@@ -17,12 +17,10 @@ export class ZapiWhatsappService extends WhatsappRepository {
 
   async sendText(input: SendTextInput): Promise<void> {
     try {
-      const bla = await this.axios.zapi().post('/send-text', {
+      await this.axios.zapi().post('/send-text', {
         phone: input.to,
         message: input.message,
       });
-
-      console.log(bla.data);
 
     } catch (err) {
       this.logger.error(err.message, err.stack);
