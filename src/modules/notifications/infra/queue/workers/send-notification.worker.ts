@@ -1,9 +1,13 @@
 import { HttpException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { UnrecoverableError, Worker } from 'bullmq';
+import { ProcessWhatsappButtonActionsNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-button-actions-notification.use-case';
+import { ProcessWhatsappButtonOtpNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-button-otp-notification.use-case';
+import { ProcessWhatsappButtonPixNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-button-pix-notification.use-case';
+import { ProcessWhatsappSendTextNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-send-text-notification.use-case';
+import { NotificationType } from 'src/modules/notifications/domain/enums/notification-type.enum';
 import { BullMqService } from '../../../../../shared/bullmq/bullmq.service';
-import { ProcessNotificationUseCase } from '../../../application/use-cases/process-notification.use-case';
 import { NotificationRepository } from '../../../domain/repositories/notification.repository';
-import type { SendNotificationJobData } from '../../../domain/repositories/queue.repository';
+import type { SendButtonActionsJobData, SendButtonOtpJobData, SendButtonPixJobData, SendNotificationJobData, SendTextJobData } from '../../../domain/repositories/queue.repository';
 
 @Injectable()
 export class SendNotificationWorker implements OnModuleInit {
@@ -11,7 +15,10 @@ export class SendNotificationWorker implements OnModuleInit {
 
   constructor(
     private readonly bullmq: BullMqService,
-    private readonly processNotification: ProcessNotificationUseCase,
+    private readonly processWhatsappButtonActions: ProcessWhatsappButtonActionsNotificationUseCase,
+    private readonly processWhatsappButtonOtp: ProcessWhatsappButtonOtpNotificationUseCase,
+    private readonly processWhatsappButtonPix: ProcessWhatsappButtonPixNotificationUseCase,
+    private readonly processWhatsappSendText: ProcessWhatsappSendTextNotificationUseCase,
     private readonly notificationRepository: NotificationRepository,
     private readonly logger: Logger,
   ) { }
@@ -20,10 +27,21 @@ export class SendNotificationWorker implements OnModuleInit {
     this.worker = this.bullmq.createWorker<SendNotificationJobData>(
       'notifications-send',
       async (job) => {
-        const { notificationId } = job.data;
+        const { notificationId, type } = job.data;
 
         try {
-          await this.processNotification.execute(job.data);
+          const handlerByType: Record<NotificationType, (input: SendNotificationJobData) => Promise<void>> = {
+            [NotificationType.TEXT]: async (input: SendTextJobData) =>
+              this.processWhatsappSendText.execute(input),
+            [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsJobData) =>
+              this.processWhatsappButtonActions.execute(input),
+            [NotificationType.BUTTON_OTP]: async (input: SendButtonOtpJobData) =>
+              this.processWhatsappButtonOtp.execute(input),
+            [NotificationType.BUTTON_PIX]: async (input: SendButtonPixJobData) =>
+              this.processWhatsappButtonPix.execute(input),
+          };
+
+          await handlerByType[type](job.data);
         } catch (err) {
           this.logError(err);
 

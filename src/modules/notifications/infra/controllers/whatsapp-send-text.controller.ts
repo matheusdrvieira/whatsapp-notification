@@ -4,13 +4,15 @@ import { CreateWhatsappTextNotificationDto } from '../dto/create-whatsapp-text-n
 
 @Controller('v1/notifications')
 export class WhatsappTextNotificationsController {
-  constructor(private readonly createNotification: CreateWhatsappSendTextNotificationUseCase) { }
+  constructor(
+    private readonly createWhatsappSendText: CreateWhatsappSendTextNotificationUseCase,
+  ) {}
 
   @Post('whatsapp/send-text')
   async createWhatsapp(
     @Body() body: CreateWhatsappTextNotificationDto,
   ) {
-    const notification = await this.createNotification.execute({
+    const notification = await this.createWhatsappSendText.execute({
       to: body.to,
       message: body.message,
     });

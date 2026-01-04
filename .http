@@ -2,12 +2,61 @@
 @apiKey = 85683a4a-7729-4e22-83d2-69579718e132
 
 ### Create WhatsApp notification
-POST {{baseUrl}}/v1/notifications/whatsapp
+POST {{baseUrl}}/v1/notifications/whatsapp/send-text
 x-api-key: {{apiKey}}
 Content-Type: application/json
 
 {
-  "to": "+5551998516699",
-  "message": "Olá! Sua notificação foi enviada.",
-  "type":"TEXT"
+  "to": "5519999999999",
+  "message": "Olá! Sua notificação foi enviada."
+}
+
+### Create WhatsApp notification (button actions)
+POST {{baseUrl}}/v1/notifications/whatsapp/button-actions
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "to": "5519999999999",
+  "message": "uma mensagem",
+  "title": "se quiser vincular um titulo",
+  "footer": "se quiser vincular um rodape top",
+  "buttonActions": [
+    {
+      "id": "1",
+      "type": "CALL",
+      "phone": "554498398733",
+      "label": "Fale conosco"
+    },
+    {
+      "id": "2",
+      "type": "URL",
+      "url": "https://z-api.io",
+      "label": "Visite nosso site"
+    }
+  ]
+}
+
+### Create WhatsApp notification (button OTP)
+POST {{baseUrl}}/v1/notifications/whatsapp/button-otp
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "to": "5519999999999",
+  "message": "Texto da mensagem",
+  "code": "Valor a ser copiado",
+  "buttonText": "Clique aqui para copiar"
+}
+
+### Create WhatsApp notification (button PIX)
+POST {{baseUrl}}/v1/notifications/whatsapp/button-pix
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "to": "5519999999999",
+  "pixKey": "chave pix",
+  "pixType": "EVP",
+  "merchantName": "Pix"
 }
