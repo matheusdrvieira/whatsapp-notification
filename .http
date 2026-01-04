@@ -7,7 +7,6 @@ x-api-key: {{apiKey}}
 Content-Type: application/json
 
 {
-  "userId": "user_123",
   "to": "+5551998516699",
   "message": "Olá! Sua notificação foi enviada."
 }

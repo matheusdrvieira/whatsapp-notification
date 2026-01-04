@@ -75,16 +75,16 @@ export class NotificationPrismaRepository implements NotificationRepository {
 
   async markFailed(notificationId: string): AsyncMaybe<Notification> {
     const result = await this.prisma.notification.updateMany({
-      where: { id: notificationId, status: NotificationStatus.SENDING },
+      where: {
+        id: notificationId,
+        status: { in: [NotificationStatus.SENDING, NotificationStatus.QUEUED] },
+      },
       data: { status: NotificationStatus.FAILED },
     });
 
     if (result.count === 0) return null;
 
-    const record = await this.prisma.notification.findUnique({
-      where: { id: notificationId },
-    });
-
+    const record = await this.prisma.notification.findUnique({ where: { id: notificationId } });
     return record ? NotificationMapper.toDomain(record) : null;
   }
 }

@@ -29,10 +29,19 @@ export class ProcessNotificationUseCase {
         message: notification.message,
       });
 
+    } catch (err) {
+      this.logger.error(err.message, err.stack);
+
+      await this.notificationRepository.markQueued(notification.id).catch(() => undefined);
+
+      if (err instanceof HttpException) throw err;
+      throw new InternalServerErrorException();
+    }
+
+    try {
       await this.notificationRepository.markSent(notification.id);
     } catch (err) {
       this.logger.error(err.message, err.stack);
-      await this.notificationRepository.markQueued(notification.id);
       if (err instanceof HttpException) throw err;
       throw new InternalServerErrorException();
     }
