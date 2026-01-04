@@ -3,9 +3,14 @@ import { NestFactory } from '@nestjs/core';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 import { env } from './config/env';
+import { AppLogger } from './shared/logger/app-logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  const logger = await app.resolve(AppLogger);
+  app.useLogger(logger);
+
   app.enableShutdownHooks();
 
   app.useGlobalPipes(

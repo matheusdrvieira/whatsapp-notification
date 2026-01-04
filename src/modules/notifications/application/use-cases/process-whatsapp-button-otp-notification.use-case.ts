@@ -3,8 +3,8 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
-  Logger,
 } from '@nestjs/common';
+import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
 import type { SendButtonOtpJobData } from '../../domain/repositories/queue.repository';
 import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
@@ -14,8 +14,10 @@ export class ProcessWhatsappButtonOtpNotificationUseCase {
   constructor(
     private readonly notificationRepository: NotificationRepository,
     private readonly whatsappProvider: WhatsappRepository,
-    private readonly logger: Logger,
-  ) {}
+    private readonly logger: AppLogger,
+  ) {
+    this.logger.setContext(ProcessWhatsappButtonOtpNotificationUseCase.name);
+  }
 
   async execute(input: SendButtonOtpJobData): Promise<void> {
     if (!input.notificationId) throw new BadRequestException();
@@ -33,7 +35,7 @@ export class ProcessWhatsappButtonOtpNotificationUseCase {
         buttonText: input.buttonText,
       });
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
 
       await this.notificationRepository.markQueued(notification.id).catch(() => undefined);
 
@@ -44,7 +46,7 @@ export class ProcessWhatsappButtonOtpNotificationUseCase {
     try {
       await this.notificationRepository.markSent(notification.id);
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
       if (err instanceof HttpException) throw err;
       throw new InternalServerErrorException();
     }

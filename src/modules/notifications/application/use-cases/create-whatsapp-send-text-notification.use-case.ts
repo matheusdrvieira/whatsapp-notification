@@ -2,8 +2,8 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
-  Logger,
 } from '@nestjs/common';
+import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import { Notification } from '../../domain/entities/notification.entity';
 import { NotificationStatus } from '../../domain/enums/notification-status.enum';
 import { NotificationType } from '../../domain/enums/notification-type.enum';
@@ -15,8 +15,10 @@ export class CreateWhatsappSendTextNotificationUseCase {
   constructor(
     private readonly notificationRepository: NotificationRepository,
     private readonly queue: QueueRepository,
-    private readonly logger: Logger,
-  ) {}
+    private readonly logger: AppLogger,
+  ) {
+    this.logger.setContext(CreateWhatsappSendTextNotificationUseCase.name);
+  }
 
   async execute(input: { to: string; message: string }): Promise<Notification> {
     try {
@@ -36,7 +38,7 @@ export class CreateWhatsappSendTextNotificationUseCase {
 
       return created;
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
       if (err instanceof HttpException) {
         throw err;
       }
@@ -44,4 +46,3 @@ export class CreateWhatsappSendTextNotificationUseCase {
     }
   }
 }
-

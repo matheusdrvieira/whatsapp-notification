@@ -1,10 +1,7 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { AxiosService } from '../../../../shared/axios/axios.service';
+import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import {
   SendButtonActionsInput,
   SendButtonOtpInput,
@@ -18,9 +15,10 @@ import {
 export class ZapiWhatsappService extends WhatsappRepository {
   constructor(
     private readonly axios: AxiosService,
-    private readonly logger: Logger,
+    private readonly logger: AppLogger,
   ) {
     super();
+    this.logger.setContext(ZapiWhatsappService.name);
   }
 
   async sendText(input: SendTextInput): Promise<SendMessageOutput> {
@@ -31,7 +29,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
       });
 
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
 
       if (isAxiosError(err)) {
         throw new BadRequestException(`ZAPI send-text failed`, err);
@@ -51,7 +49,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
         buttonActions: input.buttonActions,
       });
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
 
       if (isAxiosError(err)) {
         throw new BadRequestException(`ZAPI send-text failed`, err);
@@ -70,7 +68,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
         buttonText: input.buttonText,
       });
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
 
       if (isAxiosError(err)) {
         throw new BadRequestException(`ZAPI send-text failed`, err);
@@ -88,7 +86,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
         merchantName: input.merchantName,
       });
     } catch (err) {
-      this.logger.error(err.message, err.stack);
+      this.logger.error(err);
 
       if (isAxiosError(err)) {
         throw new BadRequestException(`ZAPI send-text failed`, err);
@@ -97,4 +95,3 @@ export class ZapiWhatsappService extends WhatsappRepository {
     }
   }
 }
-

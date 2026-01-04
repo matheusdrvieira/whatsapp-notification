@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullMqModule } from '../../shared/bullmq/bullmq.module';
 import { CreateWhatsappButtonActionsNotificationUseCase } from './application/use-cases/create-whatsapp-button-actions-notification.use-case';
@@ -30,7 +30,6 @@ import { SendNotificationWorker } from './infra/queue/workers/send-notification.
     WhatsappButtonPixNotificationsController,
   ],
   providers: [
-    Logger,
     PrismaService,
     CreateWhatsappSendTextNotificationUseCase,
     CreateWhatsappButtonActionsNotificationUseCase,

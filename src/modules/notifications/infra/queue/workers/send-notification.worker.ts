@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { HttpException, Injectable, OnModuleInit } from '@nestjs/common';
 import { UnrecoverableError, Worker } from 'bullmq';
 import { ProcessWhatsappButtonActionsNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-button-actions-notification.use-case';
 import { ProcessWhatsappButtonOtpNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-button-otp-notification.use-case';
@@ -6,6 +6,7 @@ import { ProcessWhatsappButtonPixNotificationUseCase } from 'src/modules/notific
 import { ProcessWhatsappSendTextNotificationUseCase } from 'src/modules/notifications/application/use-cases/process-whatsapp-send-text-notification.use-case';
 import { NotificationType } from 'src/modules/notifications/domain/enums/notification-type.enum';
 import { BullMqService } from '../../../../../shared/bullmq/bullmq.service';
+import { AppLogger } from '../../../../../shared/logger/app-logger.service';
 import { NotificationRepository } from '../../../domain/repositories/notification.repository';
 import type { SendButtonActionsJobData, SendButtonOtpJobData, SendButtonPixJobData, SendNotificationJobData, SendTextJobData } from '../../../domain/repositories/queue.repository';
 
@@ -20,8 +21,10 @@ export class SendNotificationWorker implements OnModuleInit {
     private readonly processWhatsappButtonPix: ProcessWhatsappButtonPixNotificationUseCase,
     private readonly processWhatsappSendText: ProcessWhatsappSendTextNotificationUseCase,
     private readonly notificationRepository: NotificationRepository,
-    private readonly logger: Logger,
-  ) { }
+    private readonly logger: AppLogger,
+  ) {
+    this.logger.setContext(SendNotificationWorker.name);
+  }
 
   onModuleInit(): void {
     this.worker = this.bullmq.createWorker<SendNotificationJobData>(
@@ -84,8 +87,7 @@ export class SendNotificationWorker implements OnModuleInit {
   }
 
   private logError(err: unknown): void {
-    const e = err as any;
-    this.logger.error(e?.message ?? String(err), e?.stack);
+    this.logger.error(err);
   }
 
   private getErrorMessage(err: unknown): string {
