@@ -1,9 +1,12 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import { CreateNotificationUseCase } from '../../application/use-cases/create-notification.use-case';
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { CreateWhatsappTextNotificationDto } from '../dto/create-whatsapp-text-notification.dto';
 
+@ApiTags('Notifications - Text')
+@ApiSecurity('api-key')
 @Controller('v1/notifications')
 export class WhatsappTextNotificationsController {
   constructor(

@@ -25,6 +25,10 @@ export class AuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest<Request>();
+    if (request.path.startsWith('/docs')) {
+      return true;
+    }
+
     const headerValue = request.headers['x-api-key'];
     const apiKey = Array.isArray(headerValue) ? headerValue[0] : headerValue;
 
