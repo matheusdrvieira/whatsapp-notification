@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { AuthGuard } from './shared/auth/auth.guard';
+import { HealthController } from './shared/health/health.controller';
 import { LoggerModule } from './shared/logger/logger.module';
 
 @Module({
@@ -13,7 +14,7 @@ import { LoggerModule } from './shared/logger/logger.module';
     LoggerModule,
     NotificationsModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [
     {
       provide: APP_GUARD,

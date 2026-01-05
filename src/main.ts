@@ -11,6 +11,8 @@ async function bootstrap() {
   const logger = await app.resolve(AppLogger);
   app.useLogger(logger);
 
+  app.enableCors();
+
   app.enableShutdownHooks();
 
   app.useGlobalPipes(
