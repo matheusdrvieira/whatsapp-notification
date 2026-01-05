@@ -1,19 +1,21 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
-import { CreateWhatsappButtonOtpNotificationUseCase } from '../../application/use-cases/create-whatsapp-button-otp-notification.use-case';
+import { CreateNotificationUseCase } from '../../application/use-cases/create-notification.use-case';
+import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { CreateWhatsappButtonOtpNotificationDto } from '../dto/create-whatsapp-button-otp-notification.dto';
 
 @Controller('v1/notifications')
 export class WhatsappButtonOtpNotificationsController {
   constructor(
-    private readonly createWhatsappButtonOtpUseCase: CreateWhatsappButtonOtpNotificationUseCase,
+    private readonly createNotification: CreateNotificationUseCase,
     private readonly logger: AppLogger,
   ) {}
 
   @Post('whatsapp/button-otp')
   async createWhatsappButtonOtp(@Body() body: CreateWhatsappButtonOtpNotificationDto) {
     try {
-      const notification = await this.createWhatsappButtonOtpUseCase.execute({
+      const notification = await this.createNotification.execute({
+        type: NotificationType.BUTTON_OTP,
         to: body.to,
         message: body.message,
         code: body.code,

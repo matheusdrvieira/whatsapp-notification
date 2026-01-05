@@ -1,12 +1,13 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
-import { CreateWhatsappSendTextNotificationUseCase } from '../../application/use-cases/create-whatsapp-send-text-notification.use-case';
+import { CreateNotificationUseCase } from '../../application/use-cases/create-notification.use-case';
+import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { CreateWhatsappTextNotificationDto } from '../dto/create-whatsapp-text-notification.dto';
 
 @Controller('v1/notifications')
 export class WhatsappTextNotificationsController {
   constructor(
-    private readonly createNotification: CreateWhatsappSendTextNotificationUseCase,
+    private readonly createNotification: CreateNotificationUseCase,
     private readonly logger: AppLogger,
   ) { }
 
@@ -16,6 +17,7 @@ export class WhatsappTextNotificationsController {
   ) {
     try {
       const notification = await this.createNotification.execute({
+        type: NotificationType.SEND_TEXT,
         to: body.to,
         message: body.message,
       });

@@ -9,46 +9,37 @@ import { NotificationStatus } from '../../domain/enums/notification-status.enum'
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
 import { QueueRepository } from '../../domain/repositories/queue.repository';
-import type { PixKeyType } from '../../domain/repositories/whatsapp.repository';
+import { CreateNotificationStrategy } from '../strategies/create-notification.strategy';
 
 @Injectable()
-export class CreateWhatsappButtonPixNotificationUseCase {
+export class CreateNotificationUseCase {
   constructor(
     private readonly notificationRepository: NotificationRepository,
     private readonly queue: QueueRepository,
+    private readonly createNotificationStrategy: CreateNotificationStrategy,
     private readonly logger: AppLogger,
-  ) {}
+  ) { }
 
-  async execute(input: {
-    to: string;
-    pixKey: string;
-    pixType: PixKeyType;
-    merchantName?: string;
-  }): Promise<Notification> {
+  async execute(input: any): Promise<Notification> {
     try {
-      const created = await this.notificationRepository.create(
+      const message = input.type === NotificationType.BUTTON_PIX ? '' : input.message;
+
+      const notification = await this.notificationRepository.create(
         Notification.create({
-          type: NotificationType.BUTTON_PIX,
+          type: input.type,
           to: input.to,
-          message: '',
+          message,
           status: NotificationStatus.QUEUED,
         }),
       );
 
-      await this.queue.enqueueSendNotification({
-        notificationId: created.id,
-        type: NotificationType.BUTTON_PIX,
-        pixKey: input.pixKey,
-        pixType: input.pixType,
-        merchantName: input.merchantName,
-      });
+      const handler = this.createNotificationStrategy.get(input.type)
 
-      return created;
+      await this.queue.enqueueSendNotification(handler(notification.id, input));
+      return notification;
     } catch (err) {
       this.logger.error(err);
-      if (err instanceof HttpException) {
-        throw err;
-      }
+      if (err instanceof HttpException) throw err;
       throw new InternalServerErrorException();
     }
   }

@@ -6,37 +6,35 @@ import {
 } from '@nestjs/common';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
-import type { SendButtonActionsInput } from '../../domain/repositories/queue.repository';
-import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
+import type { SendNotificationInput } from '../../domain/types/queue.types';
+import { ProcessNotificationStrategy } from '../strategies/process-notification.strategy';
 
 @Injectable()
-export class ProcessWhatsappButtonActionsNotificationUseCase {
+export class ProcessNotificationUseCase {
   constructor(
     private readonly notificationRepository: NotificationRepository,
-    private readonly whatsappProvider: WhatsappRepository,
+    private readonly processNotificationStrategy: ProcessNotificationStrategy,
     private readonly logger: AppLogger,
-  ) { }
+  ) {}
 
-  async execute(input: SendButtonActionsInput): Promise<void> {
+  async execute(input: SendNotificationInput): Promise<void> {
     if (!input.notificationId) throw new BadRequestException();
 
-    const notification = await this.notificationRepository.markSending(input.notificationId);
+    const notification = await this.notificationRepository.markSending(
+      input.notificationId,
+    );
 
     if (!notification) return;
 
     try {
-      await this.whatsappProvider.sendButtonActions({
-        to: notification.to,
-        message: notification.message,
-        buttonActions: input.buttonActions,
-        delayMessage: input.delayMessage,
-        title: input.title,
-        footer: input.footer,
-      });
+      const handler = this.processNotificationStrategy.get(input.type);
+      await handler(input, notification);
     } catch (err) {
       this.logger.error(err);
 
-      await this.notificationRepository.markQueued(notification.id).catch(() => undefined);
+      await this.notificationRepository
+        .markQueued(notification.id)
+        .catch(() => undefined);
 
       if (err instanceof HttpException) throw err;
       throw new InternalServerErrorException();

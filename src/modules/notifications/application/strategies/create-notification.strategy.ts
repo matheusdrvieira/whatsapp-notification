@@ -1,0 +1,48 @@
+import { Injectable } from '@nestjs/common';
+import { NotificationType } from '../../domain/enums/notification-type.enum';
+import type {
+  SendButtonActionsInput,
+  SendButtonOtpInput,
+  SendButtonPixInput,
+  SendNotificationInput,
+  SendTextInput
+} from '../../domain/types/queue.types';
+
+@Injectable()
+export class CreateNotificationStrategy {
+  get(type: NotificationType,): (createdId: string, input: SendNotificationInput) => SendNotificationInput {
+    const handlers: Record<NotificationType, (createdId: string, input: SendNotificationInput) => SendNotificationInput> = {
+      [NotificationType.SEND_TEXT]: (createdId, _input: SendTextInput) => ({
+        notificationId: createdId,
+        type: NotificationType.SEND_TEXT,
+      }),
+      [NotificationType.BUTTON_ACTIONS]: (createdId, input: SendButtonActionsInput) => ({
+        notificationId: createdId,
+        type: NotificationType.BUTTON_ACTIONS,
+        buttonActions: input.buttonActions,
+        delayMessage: input.delayMessage,
+        title: input.title,
+        footer: input.footer,
+      }),
+      [NotificationType.BUTTON_OTP]: (createdId, input: SendButtonOtpInput) => ({
+        notificationId: createdId,
+        type: NotificationType.BUTTON_OTP,
+        code: input.code,
+        image: input.image,
+        buttonText: input.buttonText,
+      }),
+      [NotificationType.BUTTON_PIX]: (createdId, input: SendButtonPixInput) => ({
+        notificationId: createdId,
+        type: NotificationType.BUTTON_PIX,
+        pixKey: input.pixKey,
+        pixType: input.pixType,
+        merchantName: input.merchantName,
+      }),
+    };
+
+    const handler = handlers[type];
+    if (!handler) throw new Error(`CreateNotification handler ${type} não implementado.`);
+
+    return handler;
+  }
+}

@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import type { Queue } from 'bullmq';
 import { BullMqService } from '../../../../shared/bullmq/bullmq.service';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
-import {
-  QueueRepository,
-  SendNotificationInput,
-} from '../../domain/repositories/queue.repository';
+import type { SendNotificationInput } from '../../domain/types/queue.types';
+import { QueueRepository } from '../../domain/repositories/queue.repository';
 
 @Injectable()
 export class BullMqAdapter implements QueueRepository {

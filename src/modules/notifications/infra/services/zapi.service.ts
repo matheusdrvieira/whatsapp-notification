@@ -2,14 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { AxiosService } from '../../../../shared/axios/axios.service';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
-import {
-  SendButtonActionsInput,
-  SendButtonOtpInput,
-  SendButtonPixInput,
-  SendMessageOutput,
-  SendTextInput,
-  WhatsappRepository,
-} from '../../domain/repositories/whatsapp.repository';
+import type {
+  WhatsappSendButtonActionsInput,
+  WhatsappSendButtonOtpInput,
+  WhatsappSendButtonPixInput,
+  WhatsappSendMessageOutput,
+  WhatsappSendTextInput,
+} from '../../domain/types/whatsapp.types';
+import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 
 @Injectable()
 export class ZapiWhatsappService extends WhatsappRepository {
@@ -20,7 +20,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
     super();
   }
 
-  async sendText(input: SendTextInput): Promise<SendMessageOutput> {
+  async sendText(input: WhatsappSendTextInput): Promise<WhatsappSendMessageOutput> {
     try {
       return await this.axios.zapi().post('/send-text', {
         phone: input.to,
@@ -37,7 +37,9 @@ export class ZapiWhatsappService extends WhatsappRepository {
     }
   }
 
-  async sendButtonActions(input: SendButtonActionsInput): Promise<SendMessageOutput> {
+  async sendButtonActions(
+    input: WhatsappSendButtonActionsInput,
+  ): Promise<WhatsappSendMessageOutput> {
     try {
       return await this.axios.zapi().post('/send-button-actions', {
         phone: input.to,
@@ -57,7 +59,9 @@ export class ZapiWhatsappService extends WhatsappRepository {
     }
   }
 
-  async sendButtonOtp(input: SendButtonOtpInput): Promise<SendMessageOutput> {
+  async sendButtonOtp(
+    input: WhatsappSendButtonOtpInput,
+  ): Promise<WhatsappSendMessageOutput> {
     try {
       return await this.axios.zapi().post('/send-button-otp', {
         phone: input.to,
@@ -76,12 +80,14 @@ export class ZapiWhatsappService extends WhatsappRepository {
     }
   }
 
-  async sendButtonPix(input: SendButtonPixInput): Promise<SendMessageOutput> {
+  async sendButtonPix(
+    input: WhatsappSendButtonPixInput,
+  ): Promise<WhatsappSendMessageOutput> {
     try {
       return await this.axios.zapi().post('/send-button-pix', {
         phone: input.to,
         pixKey: input.pixKey,
-        type: input.type,
+        type: input.pixType,
         merchantName: input.merchantName,
       });
     } catch (err) {
