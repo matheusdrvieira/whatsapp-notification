@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { HealthController } from './modules/notifications/infra/controllers/health.controller';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { AuthGuard } from './shared/auth/auth.guard';
-import { HealthController } from './controllers/health.controller';
 import { LoggerModule } from './shared/logger/logger.module';
 
 @Module({
