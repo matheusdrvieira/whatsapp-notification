@@ -4,7 +4,6 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
 
   DATABASE_URL: z.url(),
-  REDIS_URL: z.url(),
 
   API_KEY: z.string().min(1),
 

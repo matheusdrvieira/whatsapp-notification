@@ -33,7 +33,7 @@ export class ProcessNotificationUseCase {
       this.logger.error(err);
 
       await this.notificationRepository
-        .markQueued(notification.id)
+        .markFailed(notification.id)
         .catch(() => undefined);
 
       if (err instanceof HttpException) throw err;

@@ -8,14 +8,14 @@ import { Notification } from '../../domain/entities/notification.entity';
 import { NotificationStatus } from '../../domain/enums/notification-status.enum';
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
-import { QueueRepository } from '../../domain/repositories/queue.repository';
 import { CreateNotificationStrategy } from '../strategies/create-notification.strategy';
+import { ProcessNotificationUseCase } from './process-notification.use-case';
 
 @Injectable()
 export class CreateNotificationUseCase {
   constructor(
     private readonly notificationRepository: NotificationRepository,
-    private readonly queue: QueueRepository,
+    private readonly processNotification: ProcessNotificationUseCase,
     private readonly createNotificationStrategy: CreateNotificationStrategy,
     private readonly logger: AppLogger,
   ) { }
@@ -33,10 +33,13 @@ export class CreateNotificationUseCase {
         }),
       );
 
-      const handler = this.createNotificationStrategy.get(input.type)
+      const handler = this.createNotificationStrategy.get(input.type);
+      const payload = handler(notification.id, input);
 
-      await this.queue.enqueueSendNotification(handler(notification.id, input));
-      return notification;
+      await this.processNotification.execute(payload);
+
+      const updated = await this.notificationRepository.findById(notification.id);
+      return updated ?? notification;
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) throw err;
