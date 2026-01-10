@@ -12,6 +12,16 @@ export type WhatsappSendImageInput = {
   viewOnce?: boolean;
 };
 
+export type WhatsappButtonListButton = {
+  id?: string;
+  label: string;
+};
+
+export type WhatsappButtonList = {
+  image: string;
+  buttons: WhatsappButtonListButton[];
+};
+
 export type WhatsappButtonAction =
   | {
       id?: string;
@@ -38,6 +48,13 @@ export type WhatsappSendButtonActionsInput = {
   delayMessage?: number;
   title?: string;
   footer?: string;
+};
+
+export type WhatsappSendButtonListInput = {
+  to: string;
+  message: string;
+  buttonList: WhatsappButtonList;
+  delayMessage?: number;
 };
 
 export type WhatsappSendButtonOtpInput = {

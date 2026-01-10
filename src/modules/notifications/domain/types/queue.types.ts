@@ -1,5 +1,5 @@
 import { NotificationType } from '../enums/notification-type.enum';
-import type { PixKeyType, WhatsappButtonAction } from './whatsapp.types';
+import type { PixKeyType, WhatsappButtonAction, WhatsappButtonList } from './whatsapp.types';
 
 export type SendTextInput = {
   notificationId: string;
@@ -24,6 +24,13 @@ export type SendButtonActionsInput = {
   footer?: string;
 };
 
+export type SendButtonListInput = {
+  notificationId: string;
+  type: NotificationType.BUTTON_LIST;
+  buttonList: WhatsappButtonList;
+  delayMessage?: number;
+};
+
 export type SendButtonOtpInput = {
   notificationId: string;
   type: NotificationType.BUTTON_OTP;
@@ -44,5 +51,6 @@ export type SendNotificationInput =
   | SendTextInput
   | SendImageInput
   | SendButtonActionsInput
+  | SendButtonListInput
   | SendButtonOtpInput
   | SendButtonPixInput;

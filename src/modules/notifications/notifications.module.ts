@@ -8,6 +8,7 @@ import { NotificationRepository } from './domain/repositories/notification.repos
 import { WhatsappTextNotificationsController } from './infra/controllers/whatsapp/send-text.controller';
 import { WhatsappImageNotificationsController } from './infra/controllers/whatsapp/send-image.controller';
 import { WhatsappButtonActionsNotificationsController } from './infra/controllers/whatsapp/button-actions.controller';
+import { WhatsappButtonListNotificationsController } from './infra/controllers/whatsapp/button-list.controller';
 import { WhatsappButtonOtpNotificationsController } from './infra/controllers/whatsapp/button-otp.controller';
 import { WhatsappButtonPixNotificationsController } from './infra/controllers/whatsapp/button-pix.controller';
 import { NotificationPrismaRepository } from './infra/prisma/notification.prisma-repository';
@@ -20,6 +21,7 @@ import { ServiceModule } from './infra/services/service.module';
     WhatsappTextNotificationsController,
     WhatsappImageNotificationsController,
     WhatsappButtonActionsNotificationsController,
+    WhatsappButtonListNotificationsController,
     WhatsappButtonOtpNotificationsController,
     WhatsappButtonPixNotificationsController,
   ],

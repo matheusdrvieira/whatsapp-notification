@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 import type {
   SendButtonActionsInput,
+  SendButtonListInput,
   SendButtonOtpInput,
   SendButtonPixInput,
   SendImageInput,
@@ -32,6 +33,12 @@ export class CreateNotificationStrategy {
         delayMessage: input.delayMessage,
         title: input.title,
         footer: input.footer,
+      }),
+      [NotificationType.BUTTON_LIST]: (createdId, input: SendButtonListInput) => ({
+        notificationId: createdId,
+        type: NotificationType.BUTTON_LIST,
+        buttonList: input.buttonList,
+        delayMessage: input.delayMessage,
       }),
       [NotificationType.BUTTON_OTP]: (createdId, input: SendButtonOtpInput) => ({
         notificationId: createdId,

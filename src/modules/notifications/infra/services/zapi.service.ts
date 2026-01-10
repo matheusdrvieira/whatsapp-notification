@@ -4,6 +4,7 @@ import { AxiosService } from '../../../../shared/axios/axios.service';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import type {
   WhatsappSendButtonActionsInput,
+  WhatsappSendButtonListInput,
   WhatsappSendButtonOtpInput,
   WhatsappSendButtonPixInput,
   WhatsappSendImageInput,
@@ -75,6 +76,26 @@ export class ZapiWhatsappService extends WhatsappRepository {
 
       if (isAxiosError(err)) {
         throw new BadRequestException(`ZAPI send-text failed`, err);
+      }
+      throw err;
+    }
+  }
+
+  async sendButtonList(
+    input: WhatsappSendButtonListInput,
+  ): Promise<WhatsappSendMessageOutput> {
+    try {
+      return await this.axios.zapi().post('/send-button-list', {
+        phone: input.to,
+        message: input.message,
+        buttonList: input.buttonList,
+        delayMessage: input.delayMessage,
+      });
+    } catch (err) {
+      this.logger.error(err);
+
+      if (isAxiosError(err)) {
+        throw new BadRequestException(`ZAPI send-button-list failed`, err);
       }
       throw err;
     }

@@ -4,6 +4,7 @@ import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 import type {
   SendButtonActionsInput,
+  SendButtonListInput,
   SendButtonOtpInput,
   SendButtonPixInput,
   SendImageInput,
@@ -41,6 +42,14 @@ export class ProcessNotificationStrategy {
           delayMessage: input.delayMessage,
           title: input.title,
           footer: input.footer,
+        });
+      },
+      [NotificationType.BUTTON_LIST]: async (input: SendButtonListInput, notification: Notification) => {
+        await this.whatsappProvider.sendButtonList({
+          to: notification.to,
+          message: notification.message,
+          buttonList: input.buttonList,
+          delayMessage: input.delayMessage,
         });
       },
       [NotificationType.BUTTON_OTP]: async (input: SendButtonOtpInput, notification: Notification) => {
