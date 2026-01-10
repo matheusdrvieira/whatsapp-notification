@@ -17,7 +17,7 @@ export class WhatsappImageNotificationsController {
   @Post('whatsapp/send-image')
   async createWhatsappImage(@Body() body: CreateWhatsappImageNotificationDto) {
     try {
-      const notification = await this.createNotification.execute({
+      const { notification, messageId } = await this.createNotification.execute({
         type: NotificationType.SEND_IMAGE,
         to: body.to,
         message: body.caption,
@@ -30,7 +30,7 @@ export class WhatsappImageNotificationsController {
       return {
         id: notification.id,
         to: notification.to,
-        message: notification.message,
+        messageId,
         status: notification.status,
         createdAt: notification.createdAt,
         updatedAt: notification.updatedAt,

@@ -19,7 +19,7 @@ export class WhatsappTextNotificationsController {
     @Body() body: CreateWhatsappTextNotificationDto,
   ) {
     try {
-      const notification = await this.createNotification.execute({
+      const { notification, messageId } = await this.createNotification.execute({
         type: NotificationType.SEND_TEXT,
         to: body.to,
         message: body.message,
@@ -28,10 +28,9 @@ export class WhatsappTextNotificationsController {
       return {
         id: notification.id,
         to: notification.to,
-        message: notification.message,
+        messageId,
         status: notification.status,
-        createdAt: notification.createdAt,
-        updatedAt: notification.updatedAt,
+        createdAt: notification.createdAt
       };
     } catch (err) {
       this.logger.error(err);

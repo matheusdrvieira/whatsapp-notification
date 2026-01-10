@@ -7,6 +7,7 @@ import {
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
 import type { SendNotificationInput } from '../../domain/types/queue.types';
+import type { WhatsappSendMessageOutput } from '../../domain/types/whatsapp.types';
 import { ProcessNotificationStrategy } from '../strategies/process-notification.strategy';
 
 @Injectable()
@@ -15,20 +16,23 @@ export class ProcessNotificationUseCase {
     private readonly notificationRepository: NotificationRepository,
     private readonly processNotificationStrategy: ProcessNotificationStrategy,
     private readonly logger: AppLogger,
-  ) {}
+  ) { }
 
-  async execute(input: SendNotificationInput): Promise<void> {
+  async execute(input: SendNotificationInput): Promise<WhatsappSendMessageOutput | null> {
     if (!input.notificationId) throw new BadRequestException();
 
     const notification = await this.notificationRepository.markSending(
       input.notificationId,
     );
 
-    if (!notification) return;
+    if (!notification) return null;
+
+    let sendResult: WhatsappSendMessageOutput | null = null;
 
     try {
       const handler = this.processNotificationStrategy.get(input.type);
-      await handler(input, notification);
+      sendResult = await handler(input, notification);
+
     } catch (err) {
       this.logger.error(err);
 
@@ -47,5 +51,7 @@ export class ProcessNotificationUseCase {
       if (err instanceof HttpException) throw err;
       throw new InternalServerErrorException();
     }
+
+    return sendResult;
   }
 }

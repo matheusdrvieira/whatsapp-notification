@@ -10,6 +10,11 @@ import { NotificationRepository } from '../../domain/repositories/notification.r
 import { CreateNotificationStrategy } from '../strategies/create-notification.strategy';
 import { ProcessNotificationUseCase } from './process-notification.use-case';
 
+type CreateNotificationResult = {
+  notification: Notification;
+  messageId: string | null;
+};
+
 @Injectable()
 export class CreateNotificationUseCase {
   constructor(
@@ -19,13 +24,12 @@ export class CreateNotificationUseCase {
     private readonly logger: AppLogger,
   ) { }
 
-  async execute(input: any): Promise<Notification> {
+  async execute(input: any): Promise<CreateNotificationResult> {
     try {
       const notification = await this.notificationRepository.create(
         Notification.create({
           type: input.type,
           to: input.to,
-          message: input.message,
           status: NotificationStatus.QUEUED,
         }),
       );
@@ -33,9 +37,12 @@ export class CreateNotificationUseCase {
       const handler = this.createNotificationStrategy.get(input.type);
       const payload = handler(notification.id, input);
 
-      await this.processNotification.execute(payload);
+      const sendResult = await this.processNotification.execute(payload);
 
-      return notification;
+      return {
+        notification,
+        messageId: sendResult?.messageId ?? null,
+      };
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) throw err;

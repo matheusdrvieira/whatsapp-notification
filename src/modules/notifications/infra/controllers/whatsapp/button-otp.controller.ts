@@ -12,12 +12,12 @@ export class WhatsappButtonOtpNotificationsController {
   constructor(
     private readonly createNotification: CreateNotificationUseCase,
     private readonly logger: AppLogger,
-  ) {}
+  ) { }
 
   @Post('whatsapp/button-otp')
   async createWhatsappButtonOtp(@Body() body: CreateWhatsappButtonOtpNotificationDto) {
     try {
-      const notification = await this.createNotification.execute({
+      const { notification, messageId } = await this.createNotification.execute({
         type: NotificationType.BUTTON_OTP,
         to: body.to,
         message: body.message,
@@ -29,7 +29,7 @@ export class WhatsappButtonOtpNotificationsController {
       return {
         id: notification.id,
         to: notification.to,
-        message: notification.message,
+        messageId,
         status: notification.status,
         createdAt: notification.createdAt,
         updatedAt: notification.updatedAt,

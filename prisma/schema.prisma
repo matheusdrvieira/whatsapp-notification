@@ -10,7 +10,6 @@ model Notification {
   id        String   @id @default(uuid())
   type      String   @default("TEXT")
   to        String
-  message   String
   status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

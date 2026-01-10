@@ -12,12 +12,12 @@ export class WhatsappButtonPixNotificationsController {
   constructor(
     private readonly createNotification: CreateNotificationUseCase,
     private readonly logger: AppLogger,
-  ) {}
+  ) { }
 
   @Post('whatsapp/button-pix')
   async createWhatsappButtonPix(@Body() body: CreateWhatsappButtonPixNotificationDto) {
     try {
-      const notification = await this.createNotification.execute({
+      const { notification, messageId } = await this.createNotification.execute({
         type: NotificationType.BUTTON_PIX,
         to: body.to,
         pixKey: body.pixKey,
@@ -28,10 +28,9 @@ export class WhatsappButtonPixNotificationsController {
       return {
         id: notification.id,
         to: notification.to,
-        message: notification.message,
+        messageId,
         status: notification.status,
         createdAt: notification.createdAt,
-        updatedAt: notification.updatedAt,
       };
     } catch (err) {
       this.logger.error(err);

@@ -8,7 +8,6 @@ export class NotificationMapper {
     return {
       type: entity.type,
       to: entity.to,
-      message: entity.message,
       status: entity.status,
     };
   }
@@ -18,7 +17,6 @@ export class NotificationMapper {
       id: record.id,
       type: NotificationType[record.type],
       to: record.to,
-      message: record.message,
       status: NotificationStatus[record.status],
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,

@@ -12,7 +12,7 @@ export class WhatsappButtonListNotificationsController {
   constructor(
     private readonly createNotification: CreateNotificationUseCase,
     private readonly logger: AppLogger,
-  ) {}
+  ) { }
 
   @Post('whatsapp/button-list')
   async createWhatsappButtonList(
@@ -27,7 +27,7 @@ export class WhatsappButtonListNotificationsController {
         })),
       };
 
-      const notification = await this.createNotification.execute({
+      const { notification, messageId } = await this.createNotification.execute({
         type: NotificationType.BUTTON_LIST,
         to: body.to,
         message: body.message,
@@ -38,10 +38,9 @@ export class WhatsappButtonListNotificationsController {
       return {
         id: notification.id,
         to: notification.to,
-        message: notification.message,
+        messageId,
         status: notification.status,
         createdAt: notification.createdAt,
-        updatedAt: notification.updatedAt,
       };
     } catch (err) {
       this.logger.error(err);

@@ -4,9 +4,11 @@ import { CreateNotificationStrategy } from './application/strategies/create-noti
 import { ProcessNotificationStrategy } from './application/strategies/process-notification.strategy';
 import { CreateNotificationUseCase } from './application/use-cases/create-notification.use-case';
 import { ProcessNotificationUseCase } from './application/use-cases/process-notification.use-case';
+import { SendTextAndButtonActionsUseCase } from './application/use-cases/send-text-and-button-actions.use-case';
 import { NotificationRepository } from './domain/repositories/notification.repository';
 import { WhatsappTextNotificationsController } from './infra/controllers/whatsapp/send-text.controller';
 import { WhatsappImageNotificationsController } from './infra/controllers/whatsapp/send-image.controller';
+import { WhatsappImageAndButtonActionsNotificationsController } from './infra/controllers/whatsapp/send-image-and-button-actions.controller';
 import { WhatsappButtonActionsNotificationsController } from './infra/controllers/whatsapp/button-actions.controller';
 import { WhatsappButtonListNotificationsController } from './infra/controllers/whatsapp/button-list.controller';
 import { WhatsappButtonOtpNotificationsController } from './infra/controllers/whatsapp/button-otp.controller';
@@ -20,6 +22,7 @@ import { ServiceModule } from './infra/services/service.module';
   controllers: [
     WhatsappTextNotificationsController,
     WhatsappImageNotificationsController,
+    WhatsappImageAndButtonActionsNotificationsController,
     WhatsappButtonActionsNotificationsController,
     WhatsappButtonListNotificationsController,
     WhatsappButtonOtpNotificationsController,
@@ -31,6 +34,7 @@ import { ServiceModule } from './infra/services/service.module';
     ProcessNotificationStrategy,
     CreateNotificationUseCase,
     ProcessNotificationUseCase,
+    SendTextAndButtonActionsUseCase,
     {
       provide: NotificationRepository,
       useClass: NotificationPrismaRepository,

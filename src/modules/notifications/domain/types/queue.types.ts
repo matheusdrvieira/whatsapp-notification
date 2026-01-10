@@ -4,6 +4,7 @@ import type { PixKeyType, WhatsappButtonAction, WhatsappButtonList } from './wha
 export type SendTextInput = {
   notificationId: string;
   type: NotificationType.SEND_TEXT;
+  message: string;
 };
 
 export type SendImageInput = {
@@ -13,6 +14,7 @@ export type SendImageInput = {
   messageId?: string;
   delayMessage?: number;
   viewOnce?: boolean;
+  caption?: string;
 };
 
 export type SendButtonActionsInput = {
@@ -20,6 +22,7 @@ export type SendButtonActionsInput = {
   type: NotificationType.BUTTON_ACTIONS;
   buttonActions: WhatsappButtonAction[];
   delayMessage?: number;
+  message: string;
   title?: string;
   footer?: string;
 };
@@ -28,12 +31,14 @@ export type SendButtonListInput = {
   notificationId: string;
   type: NotificationType.BUTTON_LIST;
   buttonList: WhatsappButtonList;
+  message: string;
   delayMessage?: number;
 };
 
 export type SendButtonOtpInput = {
   notificationId: string;
   type: NotificationType.BUTTON_OTP;
+  message: string;
   code: string;
   image?: string;
   buttonText?: string;

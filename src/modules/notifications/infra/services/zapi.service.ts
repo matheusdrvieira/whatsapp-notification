@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { AxiosService } from '../../../../shared/axios/axios.service';
 import { AppLogger } from '../../../../shared/logger/app-logger.service';
+import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 import type {
   WhatsappSendButtonActionsInput,
   WhatsappSendButtonListInput,
@@ -11,7 +12,6 @@ import type {
   WhatsappSendMessageOutput,
   WhatsappSendTextInput,
 } from '../../domain/types/whatsapp.types';
-import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 
 @Injectable()
 export class ZapiWhatsappService extends WhatsappRepository {
@@ -24,11 +24,12 @@ export class ZapiWhatsappService extends WhatsappRepository {
 
   async sendText(input: WhatsappSendTextInput): Promise<WhatsappSendMessageOutput> {
     try {
-      return await this.axios.zapi().post('/send-text', {
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-text', {
         phone: input.to,
         message: input.message,
       });
 
+      return data;
     } catch (err) {
       this.logger.error(err);
 
@@ -41,7 +42,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
 
   async sendImage(input: WhatsappSendImageInput): Promise<WhatsappSendMessageOutput> {
     try {
-      return await this.axios.zapi().post('/send-image', {
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-image', {
         phone: input.to,
         image: input.image,
         caption: input.caption,
@@ -49,6 +50,8 @@ export class ZapiWhatsappService extends WhatsappRepository {
         delayMessage: input.delayMessage,
         viewOnce: input.viewOnce,
       });
+
+      return data;
     } catch (err) {
       this.logger.error(err);
 
@@ -63,7 +66,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
     input: WhatsappSendButtonActionsInput,
   ): Promise<WhatsappSendMessageOutput> {
     try {
-      return await this.axios.zapi().post('/send-button-actions', {
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-actions', {
         phone: input.to,
         message: input.message,
         title: input.title,
@@ -71,6 +74,8 @@ export class ZapiWhatsappService extends WhatsappRepository {
         delayMessage: input.delayMessage,
         buttonActions: input.buttonActions,
       });
+
+      return data;
     } catch (err) {
       this.logger.error(err);
 
@@ -85,12 +90,14 @@ export class ZapiWhatsappService extends WhatsappRepository {
     input: WhatsappSendButtonListInput,
   ): Promise<WhatsappSendMessageOutput> {
     try {
-      return await this.axios.zapi().post('/send-button-list', {
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-list', {
         phone: input.to,
         message: input.message,
         buttonList: input.buttonList,
         delayMessage: input.delayMessage,
       });
+
+      return data;
     } catch (err) {
       this.logger.error(err);
 
@@ -105,13 +112,15 @@ export class ZapiWhatsappService extends WhatsappRepository {
     input: WhatsappSendButtonOtpInput,
   ): Promise<WhatsappSendMessageOutput> {
     try {
-      return await this.axios.zapi().post('/send-button-otp', {
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-otp', {
         phone: input.to,
         message: input.message,
         code: input.code,
         image: input.image,
         buttonText: input.buttonText,
       });
+
+      return data;
     } catch (err) {
       this.logger.error(err);
 
@@ -126,12 +135,14 @@ export class ZapiWhatsappService extends WhatsappRepository {
     input: WhatsappSendButtonPixInput,
   ): Promise<WhatsappSendMessageOutput> {
     try {
-      return await this.axios.zapi().post('/send-button-pix', {
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-pix', {
         phone: input.to,
         pixKey: input.pixKey,
         type: input.pixType,
         merchantName: input.merchantName,
       });
+
+      return data;
     } catch (err) {
       this.logger.error(err);
 

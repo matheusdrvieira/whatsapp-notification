@@ -6,7 +6,6 @@ export type NotificationProps = {
   id?: string;
   type: NotificationType;
   to: string;
-  message: string;
   status: NotificationStatus;
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,10 +22,6 @@ export class Notification extends Entity<NotificationProps> {
 
   get to() {
     return this.props.to;
-  }
-
-  get message() {
-    return this.props.message;
   }
 
   get status() {
