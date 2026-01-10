@@ -29,9 +29,6 @@ export class SendTextAndButtonActionsUseCase {
         delayMessage: input.delayMessage,
       });
 
-      console.log(imageResult);
-
-
       const buttonActionsResult = await this.createNotification.execute({
         type: NotificationType.BUTTON_ACTIONS,
         to: input.to,

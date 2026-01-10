@@ -51,17 +51,6 @@ export class WhatsappImageAndButtonActionsNotificationsController {
                 }
             });
 
-            console.log({
-                to: body.to,
-                image: body.image,
-                buttonsMessage: body.buttonsMessage,
-                buttonActions,
-                delayMessage: body.delayMessage,
-                title: body.title,
-                footer: body.footer,
-            });
-
-
             const result = await this.sendUseCase.execute({
                 to: body.to,
                 image: body.image,
