@@ -6,6 +6,7 @@ import type {
   SendButtonActionsInput,
   SendButtonOtpInput,
   SendButtonPixInput,
+  SendImageInput,
   SendNotificationInput,
   SendTextInput,
 } from '../../domain/types/queue.types';
@@ -20,6 +21,16 @@ export class ProcessNotificationStrategy {
         await this.whatsappProvider.sendText({
           to: notification.to,
           message: notification.message,
+        });
+      },
+      [NotificationType.SEND_IMAGE]: async (input: SendImageInput, notification: Notification) => {
+        await this.whatsappProvider.sendImage({
+          to: notification.to,
+          image: input.image,
+          caption: notification.message,
+          messageId: input.messageId,
+          delayMessage: input.delayMessage,
+          viewOnce: input.viewOnce,
         });
       },
       [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsInput, notification: Notification) => {

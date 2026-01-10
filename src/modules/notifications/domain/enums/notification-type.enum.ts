@@ -1,7 +1,7 @@
 export enum NotificationType {
   SEND_TEXT = 'SEND_TEXT',
+  SEND_IMAGE = 'SEND_IMAGE',
   BUTTON_ACTIONS = 'BUTTON_ACTIONS',
   BUTTON_OTP = 'BUTTON_OTP',
   BUTTON_PIX = 'BUTTON_PIX',
 }
-

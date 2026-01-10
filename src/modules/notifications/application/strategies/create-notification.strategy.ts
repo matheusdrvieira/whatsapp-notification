@@ -4,6 +4,7 @@ import type {
   SendButtonActionsInput,
   SendButtonOtpInput,
   SendButtonPixInput,
+  SendImageInput,
   SendNotificationInput,
   SendTextInput
 } from '../../domain/types/queue.types';
@@ -15,6 +16,14 @@ export class CreateNotificationStrategy {
       [NotificationType.SEND_TEXT]: (createdId, _input: SendTextInput) => ({
         notificationId: createdId,
         type: NotificationType.SEND_TEXT,
+      }),
+      [NotificationType.SEND_IMAGE]: (createdId, input: SendImageInput) => ({
+        notificationId: createdId,
+        type: NotificationType.SEND_IMAGE,
+        image: input.image,
+        messageId: input.messageId,
+        delayMessage: input.delayMessage,
+        viewOnce: input.viewOnce,
       }),
       [NotificationType.BUTTON_ACTIONS]: (createdId, input: SendButtonActionsInput) => ({
         notificationId: createdId,

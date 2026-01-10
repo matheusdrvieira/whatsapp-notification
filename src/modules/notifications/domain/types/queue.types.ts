@@ -6,6 +6,15 @@ export type SendTextInput = {
   type: NotificationType.SEND_TEXT;
 };
 
+export type SendImageInput = {
+  notificationId: string;
+  type: NotificationType.SEND_IMAGE;
+  image: string;
+  messageId?: string;
+  delayMessage?: number;
+  viewOnce?: boolean;
+};
+
 export type SendButtonActionsInput = {
   notificationId: string;
   type: NotificationType.BUTTON_ACTIONS;
@@ -33,7 +42,7 @@ export type SendButtonPixInput = {
 
 export type SendNotificationInput =
   | SendTextInput
+  | SendImageInput
   | SendButtonActionsInput
   | SendButtonOtpInput
   | SendButtonPixInput;
-

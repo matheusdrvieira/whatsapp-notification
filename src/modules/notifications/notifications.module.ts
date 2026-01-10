@@ -6,6 +6,7 @@ import { CreateNotificationUseCase } from './application/use-cases/create-notifi
 import { ProcessNotificationUseCase } from './application/use-cases/process-notification.use-case';
 import { NotificationRepository } from './domain/repositories/notification.repository';
 import { WhatsappTextNotificationsController } from './infra/controllers/whatsapp/send-text.controller';
+import { WhatsappImageNotificationsController } from './infra/controllers/whatsapp/send-image.controller';
 import { WhatsappButtonActionsNotificationsController } from './infra/controllers/whatsapp/button-actions.controller';
 import { WhatsappButtonOtpNotificationsController } from './infra/controllers/whatsapp/button-otp.controller';
 import { WhatsappButtonPixNotificationsController } from './infra/controllers/whatsapp/button-pix.controller';
@@ -17,6 +18,7 @@ import { ServiceModule } from './infra/services/service.module';
   imports: [ConfigModule, ServiceModule],
   controllers: [
     WhatsappTextNotificationsController,
+    WhatsappImageNotificationsController,
     WhatsappButtonActionsNotificationsController,
     WhatsappButtonOtpNotificationsController,
     WhatsappButtonPixNotificationsController,

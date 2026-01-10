@@ -3,6 +3,15 @@ export type WhatsappSendTextInput = {
   message: string;
 };
 
+export type WhatsappSendImageInput = {
+  to: string;
+  image: string;
+  caption?: string;
+  messageId?: string;
+  delayMessage?: number;
+  viewOnce?: boolean;
+};
+
 export type WhatsappButtonAction =
   | {
       id?: string;
@@ -53,4 +62,3 @@ export type WhatsappSendMessageOutput = {
   messageId: string;
   id: string;
 };
-
