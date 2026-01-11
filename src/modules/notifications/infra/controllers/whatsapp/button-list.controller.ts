@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import type { Response } from 'express';
 import { AppLogger } from '../../../../../shared/logger/app-logger.service';
 import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
@@ -17,6 +18,7 @@ export class WhatsappButtonListNotificationsController {
   @Post('whatsapp/button-list')
   async createWhatsappButtonList(
     @Body() body: CreateWhatsappButtonListNotificationDto,
+    @Res() res: Response,
   ) {
     try {
       const buttonList = {
@@ -35,13 +37,13 @@ export class WhatsappButtonListNotificationsController {
         delayMessage: body.delayMessage,
       });
 
-      return {
+      return res.status(HttpStatus.CREATED).send({
         id: notification.id,
         to: notification.to,
         messageId,
         status: notification.status,
         createdAt: notification.createdAt,
-      };
+      });
     } catch (err) {
       this.logger.error(err);
       throw err;

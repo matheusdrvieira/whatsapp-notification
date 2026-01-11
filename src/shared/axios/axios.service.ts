@@ -12,19 +12,19 @@ export class AxiosService {
   }
 
   build = (
-    baseURL: string,
+    baseURL?: string,
     config?: {
       headers?: Record<string, string>;
     },
   ): AxiosInstance => this.axios.create({ baseURL, ...(config ?? {}) });
 
   public zapi = (): AxiosInstance =>
-    this.build(
-      `https://api.z-api.io/instances/${env.ZAPI_INSTANCE_ID}/token/${env.ZAPI_TOKEN}`,
-      {
-        headers: {
-          'Client-Token': env.ZAPI_CLIENT_TOKEN,
-        },
+    this.build(`https://api.z-api.io/instances/${env.ZAPI_INSTANCE_ID}/token/${env.ZAPI_TOKEN}`, {
+      headers: {
+        'Client-Token': env.ZAPI_CLIENT_TOKEN,
       },
-    );
+    });
+
+  public discord = (): AxiosInstance =>
+    this.build(`https://discord.com/api/webhooks/${env.DISCORD_WEBHOOK_CLIENT}/${env.DISCORD_WEBHOOK_TOKEN}`);
 }

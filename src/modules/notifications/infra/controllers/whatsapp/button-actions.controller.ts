@@ -1,5 +1,6 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import type { Response } from 'express';
 import { AppLogger } from '../../../../../shared/logger/app-logger.service';
 import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
@@ -18,38 +19,18 @@ export class WhatsappButtonActionsNotificationsController {
   @Post('whatsapp/button-actions')
   async createWhatsappButtonActions(
     @Body() body: CreateWhatsappButtonActionsNotificationDto,
+    @Res() res: Response,
   ) {
     try {
+      const actionMappers: Record<string, (a: any) => WhatsappButtonAction> = {
+        CALL: (a) => ({ id: a.id, type: 'CALL', phone: a.phone, label: a.label }),
+        URL: (a) => ({ id: a.id, type: 'URL', url: a.url, label: a.label }),
+        REPLY: (a) => ({ id: a.id, type: 'REPLY', label: a.label }),
+      };
+
       const buttonActions: WhatsappButtonAction[] = body.buttonActions.map((action) => {
-        switch (action.type) {
-          case 'CALL':
-            if (!action.phone) {
-              throw new BadRequestException('buttonActions.phone is required for CALL');
-            }
-            return {
-              id: action.id,
-              type: 'CALL',
-              phone: action.phone,
-              label: action.label,
-            };
-          case 'URL':
-            if (!action.url) {
-              throw new BadRequestException('buttonActions.url is required for URL');
-            }
-            return {
-              id: action.id,
-              type: 'URL',
-              url: action.url,
-              label: action.label,
-            };
-          case 'REPLY':
-          default:
-            return {
-              id: action.id,
-              type: 'REPLY',
-              label: action.label,
-            };
-        }
+        const mapper = actionMappers[action.type];
+        return mapper(action);
       });
 
       const { notification, messageId } = await this.createNotification.execute({
@@ -62,14 +43,14 @@ export class WhatsappButtonActionsNotificationsController {
         footer: body.footer,
       });
 
-      return {
+      return res.status(HttpStatus.CREATED).send({
         id: notification.id,
         to: notification.to,
         messageId,
         status: notification.status,
         createdAt: notification.createdAt,
         updatedAt: notification.updatedAt,
-      };
+      });
     } catch (err) {
       this.logger.error(err);
       throw err;
