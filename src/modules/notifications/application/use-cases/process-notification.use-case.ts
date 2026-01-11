@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AppLogger } from '../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../shared/logger/logger.service';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
 import type { SendNotificationInput } from '../../domain/types/queue.types';
 import type { WhatsappSendMessageOutput } from '../../domain/types/whatsapp.types';
@@ -15,7 +15,7 @@ export class ProcessNotificationUseCase {
   constructor(
     private readonly notificationRepository: NotificationRepository,
     private readonly processNotificationStrategy: ProcessNotificationStrategy,
-    private readonly logger: AppLogger,
+    private readonly logger: Logger,
   ) { }
 
   async execute(input: SendNotificationInput): Promise<WhatsappSendMessageOutput | null> {

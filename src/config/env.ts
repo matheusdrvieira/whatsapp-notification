@@ -11,8 +11,8 @@ const envSchema = z.object({
   ZAPI_TOKEN: z.string().min(1),
   ZAPI_CLIENT_TOKEN: z.string().min(1),
 
-  DISCORD_WEBHOOK_CLIENT: z.string().min(1),
-  DISCORD_WEBHOOK_TOKEN: z.string().min(1),
+  DISCORD_EVENT_ERROR: z.string().min(1),
+  DISCORD_EVENT_DISCONNECTED: z.string().min(1),
 });
 
 const parsed = envSchema.parse(process.env);

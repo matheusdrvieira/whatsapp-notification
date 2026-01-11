@@ -5,3 +5,10 @@ export type EventDisconnectedInput = {
     type: string;
     instanceId: string;
 };
+
+export type EventSystemErrorInput = {
+    message: string;
+    stack?: string;
+    context?: string;
+    details?: unknown;
+};

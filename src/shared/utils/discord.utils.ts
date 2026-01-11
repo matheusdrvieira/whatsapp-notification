@@ -1,4 +1,5 @@
-import { EventDisconnectedInput } from 'src/modules/notifications/domain/types/webhook/disconnected.types';
+import { inspect } from 'node:util';
+import { EventDisconnectedInput, EventSystemErrorInput } from 'src/modules/notifications/domain/types/webhook/disconnected.types';
 
 export const formatEventDisconnected = (input: EventDisconnectedInput) => {
     return {
@@ -46,3 +47,41 @@ export const formatEventDisconnected = (input: EventDisconnectedInput) => {
         ],
     };
 };
+
+export const formatSystemError = (input: EventSystemErrorInput) => {
+    return {
+        embeds: [
+            {
+                title: '❌ Erro no Sistema',
+                color: 0xff3b3b,
+                fields: [
+                    {
+                        name: '🧾 Mensagem',
+                        value: `\`${input.message}\``,
+                        inline: false,
+                    },
+                    input.context && {
+                        name: '📍 Contexto',
+                        value: `\`${input.context}\``,
+                        inline: false,
+                    },
+                    input.details && {
+                        name: '📦 Detalhes',
+                        value: `\`\`\`${inspect(input.details, { depth: 3 })}\`\`\``,
+                        inline: false,
+                    },
+                    input.stack && {
+                        name: '🧨 Stack',
+                        value: `\`\`\`${input.stack.slice(0, 2500)}\`\`\``,
+                        inline: false,
+                    },
+                ].filter(Boolean),
+                timestamp: new Date().toISOString(),
+                footer: {
+                    text: 'system • error',
+                },
+            },
+        ],
+    };
+};
+

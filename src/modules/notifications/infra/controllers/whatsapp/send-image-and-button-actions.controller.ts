@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { AppLogger } from '../../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../../shared/logger/logger.service';
 import { SendTextAndButtonActionsUseCase } from '../../../application/use-cases/send-text-and-button-actions.use-case';
 import type { WhatsappButtonAction } from '../../../domain/types/whatsapp.types';
 import { CreateWhatsappImageAndButtonActionsNotificationDto } from '../../dto/create-whatsapp-image-and-button-actions-notification.dto';
@@ -12,7 +12,7 @@ import { CreateWhatsappImageAndButtonActionsNotificationDto } from '../../dto/cr
 export class WhatsappImageAndButtonActionsNotificationsController {
     constructor(
         private readonly sendUseCase: SendTextAndButtonActionsUseCase,
-        private readonly logger: AppLogger,
+        private readonly logger: Logger,
     ) { }
 
     @Post('whatsapp/send-image-and-button-actions')

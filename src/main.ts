@@ -4,12 +4,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 import { env } from './config/env';
-import { AppLogger } from './shared/logger/app-logger.service';
+import { Logger } from './shared/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
-  const logger = await app.resolve(AppLogger);
+  const logger = await app.resolve(Logger);
   app.useLogger(logger);
 
   app.enableCors();

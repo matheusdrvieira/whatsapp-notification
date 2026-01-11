@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AppLogger } from '../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../shared/logger/logger.service';
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 import type {
   SendImageAndButtonActionsInput,
@@ -15,7 +15,7 @@ import { CreateNotificationUseCase } from './create-notification.use-case';
 export class SendTextAndButtonActionsUseCase {
   constructor(
     private readonly createNotification: CreateNotificationUseCase,
-    private readonly logger: AppLogger,
+    private readonly logger: Logger,
   ) { }
 
   async execute(

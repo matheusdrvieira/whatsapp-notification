@@ -25,6 +25,6 @@ export class AxiosService {
       },
     });
 
-  public discord = (): AxiosInstance =>
-    this.build(`https://discord.com/api/webhooks/${env.DISCORD_WEBHOOK_CLIENT}/${env.DISCORD_WEBHOOK_TOKEN}`);
+  public discord = (url: string): AxiosInstance =>
+    this.build(`https://discord.com/api/webhooks/${url}`);
 }

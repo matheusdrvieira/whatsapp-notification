@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AsyncMaybe } from 'src/shared/core/logic/maybe';
-import { AppLogger } from '../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../shared/logger/logger.service';
 import { Notification } from '../../domain/entities/notification.entity';
 import { NotificationStatus } from '../../domain/enums/notification-status.enum';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
@@ -11,7 +11,7 @@ import { PrismaService } from './prisma.service';
 export class NotificationPrismaRepository implements NotificationRepository {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly logger: AppLogger,
+    private readonly logger: Logger,
   ) { }
 
   async findById(id: string): Promise<Notification | null> {

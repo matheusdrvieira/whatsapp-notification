@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { AppLogger } from './app-logger.service';
+import { Logger } from './logger.service';
 
 @Global()
 @Module({
-  providers: [AppLogger],
-  exports: [AppLogger],
+  providers: [Logger],
+  exports: [Logger],
 })
-export class LoggerModule {}
+export class LoggerModule { }
 

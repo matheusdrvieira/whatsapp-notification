@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { AxiosService } from '../../../../shared/axios/axios.service';
-import { AppLogger } from '../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../shared/logger/logger.service';
 import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 import type {
   WhatsappSendButtonActionsInput,
@@ -17,7 +17,7 @@ import type {
 export class ZapiWhatsappService extends WhatsappRepository {
   constructor(
     private readonly axios: AxiosService,
-    private readonly logger: AppLogger,
+    private readonly logger: Logger,
   ) {
     super();
   }

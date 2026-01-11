@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { AppLogger } from '../../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../../shared/logger/logger.service';
 import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
 import type { WhatsappButtonAction } from '../../../domain/types/whatsapp.types';
@@ -13,7 +13,7 @@ import { CreateWhatsappButtonActionsNotificationDto } from '../../dto/create-wha
 export class WhatsappButtonActionsNotificationsController {
   constructor(
     private readonly createNotification: CreateNotificationUseCase,
-    private readonly logger: AppLogger,
+    private readonly logger: Logger,
   ) { }
 
   @Post('whatsapp/button-actions')

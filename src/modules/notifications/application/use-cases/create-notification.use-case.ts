@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AppLogger } from '../../../../shared/logger/app-logger.service';
+import { Logger } from '../../../../shared/logger/logger.service';
 import { Notification } from '../../domain/entities/notification.entity';
 import { NotificationStatus } from '../../domain/enums/notification-status.enum';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
@@ -21,7 +21,7 @@ export class CreateNotificationUseCase {
     private readonly notificationRepository: NotificationRepository,
     private readonly processNotification: ProcessNotificationUseCase,
     private readonly createNotificationStrategy: CreateNotificationStrategy,
-    private readonly logger: AppLogger,
+    private readonly logger: Logger,
   ) { }
 
   async execute(input: any): Promise<CreateNotificationResult> {
