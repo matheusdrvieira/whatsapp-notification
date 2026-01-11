@@ -2,13 +2,15 @@ import { NotificationType } from '../enums/notification-type.enum';
 import type { PixKeyType, WhatsappButtonAction, WhatsappButtonList } from './whatsapp.types';
 
 export type SendTextInput = {
-  notificationId: string;
+  notificationId?: string;
+  phone: string;
   type: NotificationType.SEND_TEXT;
   message: string;
 };
 
 export type SendImageInput = {
-  notificationId: string;
+  notificationId?: string;
+  phone: string;
   type: NotificationType.SEND_IMAGE;
   image: string;
   messageId?: string;
@@ -18,7 +20,8 @@ export type SendImageInput = {
 };
 
 export type SendButtonActionsInput = {
-  notificationId: string;
+  notificationId?: string;
+  phone: string;
   type: NotificationType.BUTTON_ACTIONS;
   buttonActions: WhatsappButtonAction[];
   delayMessage?: number;
@@ -28,7 +31,8 @@ export type SendButtonActionsInput = {
 };
 
 export type SendButtonListInput = {
-  notificationId: string;
+  notificationId?: string;
+  phone: string;
   type: NotificationType.BUTTON_LIST;
   buttonList: WhatsappButtonList;
   message: string;
@@ -36,7 +40,8 @@ export type SendButtonListInput = {
 };
 
 export type SendButtonOtpInput = {
-  notificationId: string;
+  notificationId?: string;
+  phone: string;
   type: NotificationType.BUTTON_OTP;
   message: string;
   code: string;
@@ -45,7 +50,8 @@ export type SendButtonOtpInput = {
 };
 
 export type SendButtonPixInput = {
-  notificationId: string;
+  notificationId?: string;
+  phone: string;
   type: NotificationType.BUTTON_PIX;
   pixKey: string;
   pixType: PixKeyType;

@@ -7,7 +7,7 @@ export class CreateWhatsappTextNotificationDto {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 15)
-  to!: string;
+  phone!: string;
 
   @ApiProperty({ example: 'Olá! Sua notificação foi enviada com sucesso.' })
   @IsString()

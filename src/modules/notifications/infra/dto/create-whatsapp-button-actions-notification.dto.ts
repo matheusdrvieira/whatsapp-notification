@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -22,7 +22,7 @@ export class CreateWhatsappButtonActionsNotificationDto {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 15)
-  to!: string;
+  phone!: string;
 
   @ApiProperty({ example: 'Escolha uma opção:' })
   @IsString()

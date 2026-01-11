@@ -14,7 +14,7 @@ export class CreateWhatsappButtonPixNotificationDto {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 15)
-  to!: string;
+  phone!: string;
 
   @ApiProperty({ example: 'chave-pix@exemplo.com' })
   @IsString()

@@ -33,7 +33,7 @@ export class WhatsappImageAndButtonActionsNotificationsController {
             });
 
             const result = await this.sendUseCase.execute({
-                to: body.to,
+                to: body.phone,
                 image: body.image,
                 buttonsMessage: body.buttonsMessage,
                 buttonActions,
@@ -45,14 +45,14 @@ export class WhatsappImageAndButtonActionsNotificationsController {
             return res.status(HttpStatus.CREATED).send({
                 image: {
                     id: result.image.notification.id,
-                    to: result.image.notification.to,
+                    phone: result.image.notification.phone,
                     messageId: result.image.messageId,
                     status: result.image.notification.status,
                     createdAt: result.image.notification.createdAt,
                 },
                 buttonActions: {
                     id: result.buttonActions.notification.id,
-                    to: result.buttonActions.notification.to,
+                    phone: result.buttonActions.notification.phone,
                     messageId: result.buttonActions.messageId,
                     status: result.buttonActions.notification.status,
                     createdAt: result.buttonActions.notification.createdAt,

@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { Logger } from '../../../../../shared/logger/logger.service';
-import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
+import { ProcessNotificationUseCase } from '../../../application/use-cases/process-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
 import { CreateWhatsappButtonPixNotificationDto } from '../../dto/create-whatsapp-button-pix-notification.dto';
 
@@ -11,7 +11,7 @@ import { CreateWhatsappButtonPixNotificationDto } from '../../dto/create-whatsap
 @Controller('v1/notifications')
 export class WhatsappButtonPixNotificationsController {
   constructor(
-    private readonly createNotification: CreateNotificationUseCase,
+    private readonly processNotification: ProcessNotificationUseCase,
     private readonly logger: Logger,
   ) { }
 
@@ -21,9 +21,9 @@ export class WhatsappButtonPixNotificationsController {
     @Res() res: Response,
   ) {
     try {
-      const { notification, messageId } = await this.createNotification.execute({
+      const notification = await this.processNotification.execute({
         type: NotificationType.BUTTON_PIX,
-        to: body.to,
+        phone: body.phone,
         pixKey: body.pixKey,
         pixType: body.pixType,
         merchantName: body.merchantName,
@@ -31,8 +31,8 @@ export class WhatsappButtonPixNotificationsController {
 
       return res.status(HttpStatus.CREATED).send({
         id: notification.id,
-        to: notification.to,
-        messageId,
+        phone: notification.phone,
+        messageId: notification.messageId,
         status: notification.status,
         createdAt: notification.createdAt,
       });

@@ -4,8 +4,9 @@ import { NotificationType } from '../enums/notification-type.enum';
 
 export type NotificationProps = {
   id?: string;
+  messageId: string;
   type: NotificationType;
-  to: string;
+  phone: string;
   status: NotificationStatus;
   createdAt?: Date;
   updatedAt?: Date;
@@ -16,12 +17,16 @@ export class Notification extends Entity<NotificationProps> {
     return this.props.id!;
   }
 
+  get messageId() {
+    return this.props.messageId;
+  }
+
   get type() {
     return this.props.type;
   }
 
-  get to() {
-    return this.props.to;
+  get phone() {
+    return this.props.phone;
   }
 
   get status() {

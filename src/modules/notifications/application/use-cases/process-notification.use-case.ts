@@ -1,57 +1,37 @@
 import {
-  BadRequestException,
-  HttpException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Logger } from '../../../../shared/logger/logger.service';
-import { NotificationRepository } from '../../domain/repositories/notification.repository';
+import { Notification } from '../../domain/entities/notification.entity';
+import { NotificationStatus } from '../../domain/enums/notification-status.enum';
 import type { SendNotificationInput } from '../../domain/types/queue.types';
-import type { WhatsappSendMessageOutput } from '../../domain/types/whatsapp.types';
 import { ProcessNotificationStrategy } from '../strategies/process-notification.strategy';
+import { CreateNotificationUseCase } from './create-notification.use-case';
 
 @Injectable()
 export class ProcessNotificationUseCase {
   constructor(
-    private readonly notificationRepository: NotificationRepository,
     private readonly processNotificationStrategy: ProcessNotificationStrategy,
+    private readonly createNotificationUseCase: CreateNotificationUseCase,
     private readonly logger: Logger,
   ) { }
 
-  async execute(input: SendNotificationInput): Promise<WhatsappSendMessageOutput | null> {
-    if (!input.notificationId) throw new BadRequestException();
-
-    const notification = await this.notificationRepository.markSending(
-      input.notificationId,
-    );
-
-    if (!notification) return null;
-
-    let sendResult: WhatsappSendMessageOutput | null = null;
-
+  async execute(input: SendNotificationInput): Promise<Notification> {
     try {
       const handler = this.processNotificationStrategy.get(input.type);
-      sendResult = await handler(input, notification);
+      const sendResult = await handler(input);
+
+      return await this.createNotificationUseCase.execute(Notification.create({
+        phone: input.phone,
+        type: input.type,
+        messageId: sendResult.messageId,
+        status: NotificationStatus.SENT,
+      }));
 
     } catch (err) {
       this.logger.error(err);
-
-      await this.notificationRepository
-        .markFailed(notification.id)
-        .catch(() => undefined);
-
-      if (err instanceof HttpException) throw err;
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(err);
     }
-
-    try {
-      await this.notificationRepository.markSent(notification.id);
-    } catch (err) {
-      this.logger.error(err);
-      if (err instanceof HttpException) throw err;
-      throw new InternalServerErrorException();
-    }
-
-    return sendResult;
   }
 }

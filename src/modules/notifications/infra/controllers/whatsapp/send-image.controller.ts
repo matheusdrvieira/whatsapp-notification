@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { Logger } from '../../../../../shared/logger/logger.service';
-import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
+import { ProcessNotificationUseCase } from '../../../application/use-cases/process-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
 import { CreateWhatsappImageNotificationDto } from '../../dto/create-whatsapp-image-notification.dto';
 
@@ -11,7 +11,7 @@ import { CreateWhatsappImageNotificationDto } from '../../dto/create-whatsapp-im
 @Controller('v1/notifications')
 export class WhatsappImageNotificationsController {
   constructor(
-    private readonly createNotification: CreateNotificationUseCase,
+    private readonly processNotification: ProcessNotificationUseCase,
     private readonly logger: Logger,
   ) { }
 
@@ -21,10 +21,10 @@ export class WhatsappImageNotificationsController {
     @Res() res: Response,
   ) {
     try {
-      const { notification, messageId } = await this.createNotification.execute({
+      const notification = await this.processNotification.execute({
         type: NotificationType.SEND_IMAGE,
-        to: body.to,
-        message: body.caption,
+        phone: body.phone,
+        caption: body.caption,
         image: body.image,
         messageId: body.messageId,
         delayMessage: body.delayMessage,
@@ -33,8 +33,8 @@ export class WhatsappImageNotificationsController {
 
       return res.status(HttpStatus.CREATED).send({
         id: notification.id,
-        to: notification.to,
-        messageId,
+        phone: notification.phone,
+        messageId: notification.messageId,
         status: notification.status,
         createdAt: notification.createdAt,
         updatedAt: notification.updatedAt,

@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsInt,
   IsNotEmpty,
@@ -20,7 +20,7 @@ export class CreateWhatsappButtonListNotificationDto {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 15)
-  to!: string;
+  phone!: string;
 
   @ApiProperty({ example: 'Z-API is good?' })
   @IsString()

@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { Logger } from '../../../../../shared/logger/logger.service';
-import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
+import { ProcessNotificationUseCase } from '../../../application/use-cases/process-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
 import { CreateWhatsappTextNotificationDto } from '../../dto/create-whatsapp-text-notification.dto';
 
@@ -11,7 +11,7 @@ import { CreateWhatsappTextNotificationDto } from '../../dto/create-whatsapp-tex
 @Controller('v1/notifications')
 export class WhatsappTextNotificationsController {
   constructor(
-    private readonly createNotification: CreateNotificationUseCase,
+    private readonly processNotification: ProcessNotificationUseCase,
     private readonly logger: Logger,
   ) { }
 
@@ -21,16 +21,16 @@ export class WhatsappTextNotificationsController {
     @Res() res: Response,
   ) {
     try {
-      const { notification, messageId } = await this.createNotification.execute({
+      const notification = await this.processNotification.execute({
         type: NotificationType.SEND_TEXT,
-        to: body.to,
+        phone: body.phone,
         message: body.message,
       });
 
       return res.status(HttpStatus.CREATED).send({
         id: notification.id,
-        to: notification.to,
-        messageId,
+        phone: notification.phone,
+        messageId: notification.messageId,
         status: notification.status,
         createdAt: notification.createdAt,
       });

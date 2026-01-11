@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CreateNotificationStrategy } from './application/strategies/create-notification.strategy';
+import { AxiosModule } from '../../shared/axios/axios.module';
 import { ProcessNotificationStrategy } from './application/strategies/process-notification.strategy';
 import { CreateNotificationUseCase } from './application/use-cases/create-notification.use-case';
 import { ProcessNotificationUseCase } from './application/use-cases/process-notification.use-case';
@@ -17,7 +17,6 @@ import { ZapiDisconnectedWebhookController } from './infra/controllers/whatsapp/
 import { NotificationPrismaRepository } from './infra/prisma/notification.prisma-repository';
 import { PrismaService } from './infra/prisma/prisma.service';
 import { DiscordService } from './infra/services/discord.service';
-import { AxiosModule } from '../../shared/axios/axios.module';
 import { ServiceModule } from './infra/services/service.module';
 
 @Module({
@@ -34,7 +33,6 @@ import { ServiceModule } from './infra/services/service.module';
   ],
   providers: [
     PrismaService,
-    CreateNotificationStrategy,
     ProcessNotificationStrategy,
     CreateNotificationUseCase,
     ProcessNotificationUseCase,
@@ -44,6 +42,11 @@ import { ServiceModule } from './infra/services/service.module';
       provide: NotificationRepository,
       useClass: NotificationPrismaRepository,
     },
+  ],
+  exports: [
+    ProcessNotificationUseCase,
+    NotificationRepository,
+    ProcessNotificationStrategy,
   ],
 })
 export class NotificationsModule { }

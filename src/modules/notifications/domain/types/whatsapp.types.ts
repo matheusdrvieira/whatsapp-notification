@@ -1,10 +1,10 @@
 export type WhatsappSendTextInput = {
-  to: string;
+  phone: string;
   message: string;
 };
 
 export type WhatsappSendImageInput = {
-  to: string;
+  phone: string;
   image: string;
   caption?: string;
   messageId?: string;
@@ -24,25 +24,25 @@ export type WhatsappButtonList = {
 
 export type WhatsappButtonAction =
   | {
-      id?: string;
-      type: 'CALL';
-      phone: string;
-      label: string;
-    }
+    id?: string;
+    type: 'CALL';
+    phone: string;
+    label: string;
+  }
   | {
-      id?: string;
-      type: 'URL';
-      url: string;
-      label: string;
-    }
+    id?: string;
+    type: 'URL';
+    url: string;
+    label: string;
+  }
   | {
-      id?: string;
-      type: 'REPLY';
-      label: string;
-    };
+    id?: string;
+    type: 'REPLY';
+    label: string;
+  };
 
 export type WhatsappSendButtonActionsInput = {
-  to: string;
+  phone: string;
   message: string;
   buttonActions: WhatsappButtonAction[];
   delayMessage?: number;
@@ -51,14 +51,14 @@ export type WhatsappSendButtonActionsInput = {
 };
 
 export type WhatsappSendButtonListInput = {
-  to: string;
+  phone: string;
   message: string;
   buttonList: WhatsappButtonList;
   delayMessage?: number;
 };
 
 export type WhatsappSendButtonOtpInput = {
-  to: string;
+  phone: string;
   message: string;
   code: string;
   image?: string;
@@ -68,7 +68,7 @@ export type WhatsappSendButtonOtpInput = {
 export type PixKeyType = 'CPF' | 'CNPJ' | 'PHONE' | 'EMAIL' | 'EVP';
 
 export type WhatsappSendButtonPixInput = {
-  to: string;
+  phone: string;
   pixKey: string;
   pixType: PixKeyType;
   merchantName?: string;

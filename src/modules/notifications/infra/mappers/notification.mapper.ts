@@ -7,8 +7,9 @@ export class NotificationMapper {
   static toPrisma(entity: Notification): Prisma.NotificationCreateInput {
     return {
       type: entity.type,
-      to: entity.to,
+      phone: entity.phone,
       status: entity.status,
+      messageId: entity.messageId,
     };
   }
 
@@ -16,8 +17,9 @@ export class NotificationMapper {
     return Notification.create({
       id: record.id,
       type: NotificationType[record.type],
-      to: record.to,
+      phone: record.phone,
       status: NotificationStatus[record.status],
+      messageId: record.messageId,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     });

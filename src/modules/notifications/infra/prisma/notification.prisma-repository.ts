@@ -24,6 +24,16 @@ export class NotificationPrismaRepository implements NotificationRepository {
     }
   }
 
+  async findByMessageId(messageId: string): AsyncMaybe<Notification> {
+    try {
+      const record = await this.prisma.notification.findFirst({ where: { messageId } });
+      return record ? NotificationMapper.toDomain(record) : null;
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
+
   async create(notification: Notification): Promise<Notification> {
     try {
       const created = await this.prisma.notification.create({
@@ -37,85 +47,59 @@ export class NotificationPrismaRepository implements NotificationRepository {
     }
   }
 
-  async markSending(notificationId: string): Promise<Notification | null> {
+  async markSending(notificationId: string): AsyncMaybe<void> {
     try {
-      const result = await this.prisma.notification.updateMany({
+      await this.prisma.notification.updateMany({
         where: {
           id: notificationId,
-          status: NotificationStatus.QUEUED,
         },
         data: {
           status: NotificationStatus.SENDING,
         },
       });
-
-      if (result.count === 0) return null;
-
-      const updated = await this.prisma.notification.findUnique({
-        where: { id: notificationId },
-      });
-
-      return updated ? NotificationMapper.toDomain(updated) : null;
     } catch (err) {
       this.logger.error(err);
       throw err;
     }
   }
 
-  async markQueued(notificationId: string): AsyncMaybe<Notification> {
+  async markSent(notificationId: string): AsyncMaybe<void> {
     try {
-      const result = await this.prisma.notification.updateMany({
-        where: { id: notificationId, status: NotificationStatus.SENDING },
-        data: { status: NotificationStatus.QUEUED },
-      });
-
-      if (result.count === 0) return null;
-
-      const record = await this.prisma.notification.findUnique({
-        where: { id: notificationId },
-      });
-
-      return record ? NotificationMapper.toDomain(record) : null;
-    } catch (err) {
-      this.logger.error(err);
-      throw err;
-    }
-  }
-
-  async markSent(notificationId: string): AsyncMaybe<Notification> {
-    try {
-      const result = await this.prisma.notification.updateMany({
-        where: { id: notificationId, status: NotificationStatus.SENDING },
+      await this.prisma.notification.updateMany({
+        where: {
+          id: notificationId
+        },
         data: { status: NotificationStatus.SENT },
       });
-
-      if (result.count === 0) return null;
-
-      const record = await this.prisma.notification.findUnique({
-        where: { id: notificationId },
-      });
-
-      return record ? NotificationMapper.toDomain(record) : null;
     } catch (err) {
       this.logger.error(err);
       throw err;
     }
   }
 
-  async markFailed(notificationId: string): AsyncMaybe<Notification> {
+  async markFailed(notificationId: string): AsyncMaybe<void> {
     try {
-      const result = await this.prisma.notification.updateMany({
+      await this.prisma.notification.updateMany({
         where: {
           id: notificationId,
-          status: { in: [NotificationStatus.SENDING, NotificationStatus.QUEUED] },
         },
         data: { status: NotificationStatus.FAILED },
       });
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
 
-      if (result.count === 0) return null;
+  async findFailed(): Promise<Notification[]> {
+    try {
+      const records = await this.prisma.notification.findMany({
+        where: {
+          status: NotificationStatus.FAILED,
+        },
+      });
 
-      const record = await this.prisma.notification.findUnique({ where: { id: notificationId } });
-      return record ? NotificationMapper.toDomain(record) : null;
+      return records.map(NotificationMapper.toDomain);
     } catch (err) {
       this.logger.error(err);
       throw err;

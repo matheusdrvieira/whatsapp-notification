@@ -14,7 +14,7 @@ export class CreateWhatsappButtonOtpNotificationDto {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 15)
-  to!: string;
+  phone!: string;
 
   @ApiProperty({ example: 'Seu código de verificação é 123456' })
   @IsString()

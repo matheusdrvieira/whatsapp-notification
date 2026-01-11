@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Notification } from '../../domain/entities/notification.entity';
+
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 import { WhatsappRepository } from '../../domain/repositories/whatsapp.repository';
 import type {
@@ -17,17 +17,17 @@ import type { WhatsappSendMessageOutput } from '../../domain/types/whatsapp.type
 export class ProcessNotificationStrategy {
   constructor(private readonly whatsappProvider: WhatsappRepository) { }
 
-  get(type: NotificationType): (input: SendNotificationInput, notification: Notification) => Promise<WhatsappSendMessageOutput> {
-    const handlers: Partial<Record<NotificationType, (input: SendNotificationInput, notification: Notification) => Promise<WhatsappSendMessageOutput>>> = {
-      [NotificationType.SEND_TEXT]: async (input: SendTextInput, notification: Notification) => {
+  get(type: NotificationType): (input: SendNotificationInput) => Promise<WhatsappSendMessageOutput> {
+    const handlers: Partial<Record<NotificationType, (input: SendNotificationInput) => Promise<WhatsappSendMessageOutput>>> = {
+      [NotificationType.SEND_TEXT]: async (input: SendTextInput) => {
         return await this.whatsappProvider.sendText({
-          to: notification.to,
+          phone: input.phone,
           message: input.message,
         });
       },
-      [NotificationType.SEND_IMAGE]: async (input: SendImageInput, notification: Notification) => {
+      [NotificationType.SEND_IMAGE]: async (input: SendImageInput) => {
         return await this.whatsappProvider.sendImage({
-          to: notification.to,
+          phone: input.phone,
           image: input.image,
           caption: input.caption,
           messageId: input.messageId,
@@ -35,9 +35,9 @@ export class ProcessNotificationStrategy {
           viewOnce: input.viewOnce,
         });
       },
-      [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsInput, notification: Notification) => {
+      [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsInput) => {
         return await this.whatsappProvider.sendButtonActions({
-          to: notification.to,
+          phone: input.phone,
           message: input.message,
           buttonActions: input.buttonActions,
           delayMessage: input.delayMessage,
@@ -45,26 +45,26 @@ export class ProcessNotificationStrategy {
           footer: input.footer,
         });
       },
-      [NotificationType.BUTTON_LIST]: async (input: SendButtonListInput, notification: Notification) => {
+      [NotificationType.BUTTON_LIST]: async (input: SendButtonListInput) => {
         return await this.whatsappProvider.sendButtonList({
-          to: notification.to,
+          phone: input.phone,
           message: input.message,
           buttonList: input.buttonList,
           delayMessage: input.delayMessage,
         });
       },
-      [NotificationType.BUTTON_OTP]: async (input: SendButtonOtpInput, notification: Notification) => {
+      [NotificationType.BUTTON_OTP]: async (input: SendButtonOtpInput) => {
         return await this.whatsappProvider.sendButtonOtp({
-          to: notification.to,
+          phone: input.phone,
           message: input.message,
           code: input.code,
           image: input.image,
           buttonText: input.buttonText,
         });
       },
-      [NotificationType.BUTTON_PIX]: async (input: SendButtonPixInput, notification: Notification) => {
+      [NotificationType.BUTTON_PIX]: async (input: SendButtonPixInput) => {
         return await this.whatsappProvider.sendButtonPix({
-          to: notification.to,
+          phone: input.phone,
           pixKey: input.pixKey,
           pixType: input.pixType,
           merchantName: input.merchantName,

@@ -1,4 +1,4 @@
-import { ConsoleLogger, HttpException, Injectable, Scope } from '@nestjs/common';
+import { ConsoleLogger, HttpException, Injectable, Optional, Scope } from '@nestjs/common';
 import { inspect } from 'node:util';
 import { EventSystemErrorInput } from 'src/modules/notifications/domain/types/webhook/disconnected.types';
 import { DiscordService } from 'src/modules/notifications/infra/services/discord.service';
@@ -180,7 +180,7 @@ const fingerprintOf = (headline: string, context?: string) => {
 export class Logger extends ConsoleLogger {
   private static lastSentAtByFp = new Map<string, number>();
 
-  constructor(private readonly discord: DiscordService) {
+  constructor(@Optional() private readonly discord: DiscordService) {
     super({ timestamp: true });
   }
 
@@ -239,6 +239,6 @@ export class Logger extends ConsoleLogger {
     if (now - last < 30_000) return;
     Logger.lastSentAtByFp.set(fp, now);
 
-    await this.discord.notifyErrors(input);
+    await this.discord?.notifyErrors(input);
   }
 }

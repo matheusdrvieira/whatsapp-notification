@@ -25,7 +25,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
   async sendText(input: WhatsappSendTextInput): Promise<WhatsappSendMessageOutput> {
     try {
       const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-text', {
-        phone: input.to,
+        phone: input.phone,
         message: input.message,
       });
 
@@ -43,7 +43,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
   async sendImage(input: WhatsappSendImageInput): Promise<WhatsappSendMessageOutput> {
     try {
       const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-image', {
-        phone: input.to,
+        phone: input.phone,
         image: input.image,
         caption: input.caption,
         messageId: input.messageId,
@@ -67,7 +67,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
   ): Promise<WhatsappSendMessageOutput> {
     try {
       const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-actions', {
-        phone: input.to,
+        phone: input.phone,
         message: input.message,
         title: input.title,
         footer: input.footer,
@@ -91,7 +91,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
   ): Promise<WhatsappSendMessageOutput> {
     try {
       const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-list', {
-        phone: input.to,
+        phone: input.phone,
         message: input.message,
         buttonList: input.buttonList,
         delayMessage: input.delayMessage,
@@ -113,7 +113,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
   ): Promise<WhatsappSendMessageOutput> {
     try {
       const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-otp', {
-        phone: input.to,
+        phone: input.phone,
         message: input.message,
         code: input.code,
         image: input.image,
@@ -136,7 +136,7 @@ export class ZapiWhatsappService extends WhatsappRepository {
   ): Promise<WhatsappSendMessageOutput> {
     try {
       const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>('/send-button-pix', {
-        phone: input.to,
+        phone: input.phone,
         pixKey: input.pixKey,
         type: input.pixType,
         merchantName: input.merchantName,

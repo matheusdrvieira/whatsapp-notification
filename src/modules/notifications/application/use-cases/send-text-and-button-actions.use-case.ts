@@ -9,12 +9,12 @@ import type {
   SendImageAndButtonActionsInput,
   SendImageAndButtonActionsResult,
 } from '../../domain/types/send.types';
-import { CreateNotificationUseCase } from './create-notification.use-case';
+import { ProcessNotificationUseCase } from './process-notification.use-case';
 
 @Injectable()
 export class SendTextAndButtonActionsUseCase {
   constructor(
-    private readonly createNotification: CreateNotificationUseCase,
+    private readonly processNotification: ProcessNotificationUseCase,
     private readonly logger: Logger,
   ) { }
 
@@ -22,17 +22,17 @@ export class SendTextAndButtonActionsUseCase {
     input: SendImageAndButtonActionsInput,
   ): Promise<SendImageAndButtonActionsResult> {
     try {
-      const imageResult = await this.createNotification.execute({
+      const imageResult = await this.processNotification.execute({
         type: NotificationType.SEND_IMAGE,
-        to: input.to,
+        phone: input.to,
         image: input.image,
         delayMessage: input.delayMessage,
       });
 
-      const buttonActionsResult = await this.createNotification.execute({
+      const buttonActionsResult = await this.processNotification.execute({
         type: NotificationType.BUTTON_ACTIONS,
-        to: input.to,
-        message: input.buttonsMessage,
+        phone: input.to,
+        message: input.buttonsMessage || '',
         buttonActions: input.buttonActions,
         delayMessage: input.delayMessage,
         title: input.title,
@@ -40,8 +40,14 @@ export class SendTextAndButtonActionsUseCase {
       });
 
       return {
-        image: imageResult,
-        buttonActions: buttonActionsResult,
+        image: {
+          notification: imageResult,
+          messageId: imageResult.messageId,
+        },
+        buttonActions: {
+          notification: buttonActionsResult,
+          messageId: buttonActionsResult.messageId,
+        },
       };
     } catch (err) {
       this.logger.error(err);

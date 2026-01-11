@@ -18,7 +18,7 @@ export class CreateWhatsappImageNotificationDto {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 15)
-  to!: string;
+  phone!: string;
 
   @ApiProperty({
     example: 'https://www.z-api.io/wp-content/themes/z-api/dist/images/logo.svg',

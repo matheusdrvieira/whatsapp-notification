@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { Logger } from '../../../../../shared/logger/logger.service';
-import { CreateNotificationUseCase } from '../../../application/use-cases/create-notification.use-case';
+import { ProcessNotificationUseCase } from '../../../application/use-cases/process-notification.use-case';
 import { NotificationType } from '../../../domain/enums/notification-type.enum';
 import { CreateWhatsappButtonListNotificationDto } from '../../dto/create-whatsapp-button-list-notification.dto';
 
@@ -11,7 +11,7 @@ import { CreateWhatsappButtonListNotificationDto } from '../../dto/create-whatsa
 @Controller('v1/notifications')
 export class WhatsappButtonListNotificationsController {
   constructor(
-    private readonly createNotification: CreateNotificationUseCase,
+    private readonly processNotification: ProcessNotificationUseCase,
     private readonly logger: Logger,
   ) { }
 
@@ -29,9 +29,9 @@ export class WhatsappButtonListNotificationsController {
         })),
       };
 
-      const { notification, messageId } = await this.createNotification.execute({
+      const notification = await this.processNotification.execute({
         type: NotificationType.BUTTON_LIST,
-        to: body.to,
+        phone: body.phone,
         message: body.message,
         buttonList,
         delayMessage: body.delayMessage,
@@ -39,8 +39,8 @@ export class WhatsappButtonListNotificationsController {
 
       return res.status(HttpStatus.CREATED).send({
         id: notification.id,
-        to: notification.to,
-        messageId,
+        phone: notification.phone,
+        messageId: notification.messageId,
         status: notification.status,
         createdAt: notification.createdAt,
       });
