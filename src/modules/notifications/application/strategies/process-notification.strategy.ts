@@ -7,6 +7,7 @@ import type {
   SendButtonListInput,
   SendButtonOtpInput,
   SendButtonPixInput,
+  SendDocumentInput,
   SendImageInput,
   SendNotificationInput,
   SendTextInput,
@@ -33,6 +34,18 @@ export class ProcessNotificationStrategy {
           messageId: input.messageId,
           delayMessage: input.delayMessage,
           viewOnce: input.viewOnce,
+        });
+      },
+      [NotificationType.SEND_DOCUMENT]: async (input: SendDocumentInput) => {
+        return await this.whatsappProvider.sendDocument({
+          phone: input.phone,
+          extension: input.extension,
+          document: input.document,
+          fileName: input.fileName,
+          caption: input.caption,
+          messageId: input.messageId,
+          delayMessage: input.delayMessage,
+          editDocumentMessageId: input.editDocumentMessageId,
         });
       },
       [NotificationType.BUTTON_ACTIONS]: async (input: SendButtonActionsInput) => {

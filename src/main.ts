@@ -2,12 +2,16 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
+import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 import { env } from './config/env';
 import { Logger } from './shared/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ limit: '50mb', extended: true }));
 
   const logger = await app.resolve(Logger);
   app.useLogger(logger);

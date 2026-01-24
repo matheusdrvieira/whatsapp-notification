@@ -3,6 +3,7 @@ import type {
   WhatsappSendButtonListInput,
   WhatsappSendButtonOtpInput,
   WhatsappSendButtonPixInput,
+  WhatsappSendDocumentInput,
   WhatsappSendImageInput,
   WhatsappSendMessageOutput,
   WhatsappSendTextInput,
@@ -11,6 +12,7 @@ import type {
 export abstract class WhatsappRepository {
   abstract sendText(input: WhatsappSendTextInput): Promise<WhatsappSendMessageOutput>;
   abstract sendImage(input: WhatsappSendImageInput): Promise<WhatsappSendMessageOutput>;
+  abstract sendDocument(input: WhatsappSendDocumentInput): Promise<WhatsappSendMessageOutput>;
   abstract sendButtonActions(input: WhatsappSendButtonActionsInput): Promise<WhatsappSendMessageOutput>;
   abstract sendButtonList(input: WhatsappSendButtonListInput): Promise<WhatsappSendMessageOutput>;
   abstract sendButtonOtp(input: WhatsappSendButtonOtpInput): Promise<WhatsappSendMessageOutput>;

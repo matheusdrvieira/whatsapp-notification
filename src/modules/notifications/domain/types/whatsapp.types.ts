@@ -12,6 +12,17 @@ export type WhatsappSendImageInput = {
   viewOnce?: boolean;
 };
 
+export type WhatsappSendDocumentInput = {
+  phone: string;
+  extension: string;
+  document: string;
+  fileName?: string;
+  caption?: string;
+  messageId?: string;
+  delayMessage?: number;
+  editDocumentMessageId?: string;
+};
+
 export type WhatsappButtonListButton = {
   id?: string;
   label: string;

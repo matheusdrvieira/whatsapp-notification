@@ -19,6 +19,19 @@ export type SendImageInput = {
   caption?: string;
 };
 
+export type SendDocumentInput = {
+  notificationId?: string;
+  phone: string;
+  type: NotificationType.SEND_DOCUMENT;
+  extension: string;
+  document: string;
+  fileName?: string;
+  caption?: string;
+  messageId?: string;
+  delayMessage?: number;
+  editDocumentMessageId?: string;
+};
+
 export type SendButtonActionsInput = {
   notificationId?: string;
   phone: string;
@@ -61,6 +74,7 @@ export type SendButtonPixInput = {
 export type SendNotificationInput =
   | SendTextInput
   | SendImageInput
+  | SendDocumentInput
   | SendButtonActionsInput
   | SendButtonListInput
   | SendButtonOtpInput

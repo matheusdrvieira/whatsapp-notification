@@ -8,6 +8,7 @@ import type {
   WhatsappSendButtonListInput,
   WhatsappSendButtonOtpInput,
   WhatsappSendButtonPixInput,
+  WhatsappSendDocumentInput,
   WhatsappSendImageInput,
   WhatsappSendMessageOutput,
   WhatsappSendTextInput,
@@ -57,6 +58,30 @@ export class ZapiWhatsappService extends WhatsappRepository {
 
       if (isAxiosError(err)) {
         throw new BadRequestException(`ZAPI send-image failed`, err);
+      }
+      throw err;
+    }
+  }
+
+  async sendDocument(input: WhatsappSendDocumentInput): Promise<WhatsappSendMessageOutput> {
+    try {
+      const extension = encodeURIComponent(input.extension);
+      const { data } = await this.axios.zapi().post<WhatsappSendMessageOutput>(`/send-document/${extension}`, {
+        phone: input.phone,
+        document: input.document,
+        fileName: input.fileName,
+        caption: input.caption,
+        messageId: input.messageId,
+        delayMessage: input.delayMessage,
+        editDocumentMessageId: input.editDocumentMessageId,
+      });
+
+      return data;
+    } catch (err) {
+      this.logger.error(err);
+
+      if (isAxiosError(err)) {
+        throw new BadRequestException(`ZAPI send-document failed`, err);
       }
       throw err;
     }

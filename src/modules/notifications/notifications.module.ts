@@ -10,6 +10,7 @@ import { WhatsappButtonActionsNotificationsController } from './infra/controller
 import { WhatsappButtonListNotificationsController } from './infra/controllers/whatsapp/button-list.controller';
 import { WhatsappButtonOtpNotificationsController } from './infra/controllers/whatsapp/button-otp.controller';
 import { WhatsappButtonPixNotificationsController } from './infra/controllers/whatsapp/button-pix.controller';
+import { WhatsappDocumentNotificationsController } from './infra/controllers/whatsapp/send-document.controller';
 import { WhatsappImageAndButtonActionsNotificationsController } from './infra/controllers/whatsapp/send-image-and-button-actions.controller';
 import { WhatsappImageNotificationsController } from './infra/controllers/whatsapp/send-image.controller';
 import { WhatsappTextNotificationsController } from './infra/controllers/whatsapp/send-text.controller';
@@ -24,6 +25,7 @@ import { ServiceModule } from './infra/services/service.module';
   controllers: [
     WhatsappTextNotificationsController,
     WhatsappImageNotificationsController,
+    WhatsappDocumentNotificationsController,
     WhatsappImageAndButtonActionsNotificationsController,
     WhatsappButtonActionsNotificationsController,
     WhatsappButtonListNotificationsController,
